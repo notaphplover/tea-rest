@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use App\Repository\KidRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass=KidRepository::class)
  * @ORM\Table(name="kid")
  */
 class Kid extends Person
