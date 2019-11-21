@@ -12,6 +12,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Guardian extends Person implements UserInterface
 {
+     /**
+      * @ORM\Column(type="string", unique=true, nullable=true)
+      */
+     private $apiToken;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -36,6 +41,14 @@ class Guardian extends Person implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
+
+    /**
+     * @return mixed
+     */
+    public function getApiToken()
+    {
+        return $this->apiToken;
+    }
 
     /**
      * @return string
@@ -92,6 +105,14 @@ class Guardian extends Person implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
+    }
+
+    /**
+     * @param mixed $apiToken
+     */
+    public function setApiToken($apiToken): void
+    {
+        $this->apiToken = $apiToken;
     }
 
     /**
