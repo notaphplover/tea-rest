@@ -13,11 +13,13 @@
         "symfony/form": "4.3.*",
         "symfony/framework-bundle": "4.3.*",
         "symfony/orm-pack": "^1.0",
+        "symfony/security-bundle": "4.3.*",
         "symfony/serializer": "4.3.*",
         "symfony/validator": "4.3.*",
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "symfony/maker-bundle": "^1.14",
         "symfony/web-server-bundle": "4.3.*"
     },
     "config": {
