@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Component\JWT;
+namespace App\Component\JWT\Service;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -36,13 +36,14 @@ class JWTBuilder
      */
     public function __construct(ContainerBagInterface $params)
     {
+        $prefix = 'file://'.__DIR__.'/../../../../';
         $this->expirationSecs = (int)$params->get('jwt_cert_expiration_secs');
         $this->privateKey = new Key(
-            'file://'.__DIR__.'/../../../'.$params->get('jwt_cert_private_path'),
+            $prefix . $params->get('jwt_cert_private_path'),
             $params->get('jwt_cert_secret')
         );
         $this->publicKey = new Key(
-            'file://'.__DIR__.'/../../../'.$params->get('jwt_cert_public_path'),
+            $prefix . $params->get('jwt_cert_public_path'),
             $params->get('jwt_cert_secret')
         );
         $this->signer = new Sha256();
@@ -61,22 +62,33 @@ class JWTBuilder
 
     /**
      * @param Token $token
-     * @param UserInterface $user
-     * @return bool
+     * @return string
      */
-    public function validateToken(Token $token, UserInterface $user): bool
+    public function getUsername(Token $token): string
     {
-        return $token->verify($this->signer, $this->publicKey)
-            && $token->getClaim('user') === $user->getUsername();
+        return $token->getClaim('user');
     }
 
     /**
      * @param string $token
-     * @param UserInterface $user
+     * @return Token
+     */
+    public function parseToken(string $token): ?Token
+    {
+        try {
+            return (new Parser())->parse($token);
+        } catch (\Exception $exception) {
+            return null;
+        }
+
+    }
+
+    /**
+     * @param Token $token
      * @return bool
      */
-    public function validateStringToken(string $token, UserInterface $user): bool
+    public function validateToken(Token $token): bool
     {
-        return $this->validateToken((new Parser())->parse($token), $user);
+        return $token->verify($this->signer, $this->publicKey);
     }
 }

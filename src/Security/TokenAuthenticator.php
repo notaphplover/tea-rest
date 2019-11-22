@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Component\JWT\JWTBuilder;
+use App\Component\JWT\Service\JWTBuilder;
 use App\Repository\GuardianRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,7 +49,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user): bool
     {
-        return $this->jwtBuilder->validateStringToken($credentials['token'], $user);
+        return true;
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -60,7 +60,19 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             return;
         }
 
-        return $this->guardianRepository->findOneBy(['apiToken' => $apiToken]);
+        $token = $this->jwtBuilder->parseToken($apiToken);
+
+        if (null === $token) {
+            return;
+        }
+
+        if (!$this->jwtBuilder->validateToken($token)) {
+            return;
+        }
+
+        $username = $this->jwtBuilder->getUsername($token);
+
+        return $this->guardianRepository->findOneBy(['email' => $username]);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

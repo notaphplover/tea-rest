@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Guardian extends Person implements UserInterface
 {
      /**
-      * @ORM\Column(type="text", unique=true, length=65535, nullable=true)
+      * @ORM\Column(type="text", length=65535, nullable=true)
       * @Assert\Length(
       *     max=65535,
       *     maxMessage="your message"
