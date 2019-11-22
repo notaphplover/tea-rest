@@ -9,10 +9,9 @@ use Throwable;
 
 class InvalidCredentialsException extends BaseHttpException
 {
-    public function __construct(
-        $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct('Invalid credentials', $code, Response::HTTP_UNAUTHORIZED, $previous);
+    private const ERROR_CODE = 1000;
+
+    public function __construct(Throwable $previous = null) {
+        parent::__construct('Invalid credentials', self::ERROR_CODE, Response::HTTP_UNAUTHORIZED, $previous);
     }
 }
