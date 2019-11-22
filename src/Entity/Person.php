@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class Person
 {
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      * @var DateTime
      */
     private $birthDate;
@@ -39,9 +39,9 @@ abstract class Person
 
     /**
      * @param DateTime $birthDate
-     * @return Person
+     * @return $this
      */
-    public function setBirthDate(DateTime $birthDate): Person
+    public function setBirthDate(?DateTime $birthDate): Person
     {
         $this->birthDate = $birthDate;
         return $this;
@@ -57,7 +57,7 @@ abstract class Person
 
     /**
      * @param string $name
-     * @return Person
+     * @return $this
      */
     public function setName(string $name): Person
     {
@@ -75,7 +75,7 @@ abstract class Person
 
     /**
      * @param string $surname
-     * @return Person
+     * @return $this
      */
     public function setSurname(string $surname): Person
     {

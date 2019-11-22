@@ -1,5 +1,9 @@
 .idea
 
+/config/jwt/private.pem
+/config/jwt/public.pem
+/config/parameters.yaml
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

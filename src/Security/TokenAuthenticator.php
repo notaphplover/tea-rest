@@ -2,9 +2,8 @@
 
 namespace App\Security;
 
-use App\Entity\Guardian;
+use App\Component\JWT\JWTBuilder;
 use App\Repository\GuardianRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +18,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * @var GuardianRepository
      */
-    private $guardianRepository;
+    protected $guardianRepository;
 
-    public function __construct(GuardianRepository $guardianRepository)
+    /**
+     * @var JWTBuilder
+     */
+    protected $jwtBuilder;
+
+    public function __construct(GuardianRepository $guardianRepository, JWTBuilder $jwtBuilder)
     {
         $this->guardianRepository = $guardianRepository;
+        $this->jwtBuilder = $jwtBuilder;
     }
 
     /**
@@ -42,21 +47,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         ];
     }
 
-    public function checkCredentials($credentials, UserInterface $user)
+    public function checkCredentials($credentials, UserInterface $user): bool
     {
-        // check credentials - e.g. make sure the password is valid
-        // no credential check is needed in this case
-
-        // return true to cause authentication success
-        return true;
+        return $this->jwtBuilder->validateStringToken($credentials['token'], $user);
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
+    public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $apiToken = $credentials['token'];
 
         if (null === $apiToken) {
-            return null;
+            return;
         }
 
         return $this->guardianRepository->findOneBy(['apiToken' => $apiToken]);
@@ -64,7 +65,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // on success, let the request continue
         return null;
     }
 

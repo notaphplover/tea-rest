@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\GuardianRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=GuardianRepository::class)
@@ -13,7 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Guardian extends Person implements UserInterface
 {
      /**
-      * @ORM\Column(type="string", unique=true, nullable=true)
+      * @ORM\Column(type="text", unique=true, length=65535, nullable=true)
+      * @Assert\Length(
+      *     max=65535,
+      *     maxMessage="your message"
+      * )
       */
      private $apiToken;
 
@@ -109,34 +114,41 @@ class Guardian extends Person implements UserInterface
 
     /**
      * @param mixed $apiToken
+     * @return $this
      */
-    public function setApiToken($apiToken): void
+    public function setApiToken($apiToken): Guardian
     {
         $this->apiToken = $apiToken;
+        return $this;
     }
 
     /**
      * @param string $email
+     * @return $this
      */
-    public function setEmail(string $email): void
+    public function setEmail(string $email): Guardian
     {
         $this->email = $email;
+        return $this;
     }
 
     /**
      * @param string $password
+     * @return $this
      */
-    public function setPassword(string $password): void
+    public function setPassword(string $password): Guardian
     {
         $this->password = $password;
+        return $this;
     }
 
     /**
      * @param array $roles
+     * @return $this
      */
-    public function setRoles(array $roles): void
+    public function setRoles(array $roles): Guardian
     {
         $this->roles = $roles;
+        return $this;
     }
-
 }
