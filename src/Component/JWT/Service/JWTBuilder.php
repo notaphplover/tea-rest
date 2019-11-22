@@ -58,10 +58,10 @@ class JWTBuilder
     {
         $timeStamp = (new \DateTime())->getTimestamp();
         $expirationTimeStamp = $timeStamp + $this->expirationSecs;
-        return (new Builder())->issuedBy('http://example.com') // Configures the issuer (iss claim)
-            ->issuedAt($timeStamp) // Configures the time that the token was issue (iat claim)
-            ->expiresAt($expirationTimeStamp) // Configures the expiration time of the token (exp claim)
-            ->withClaim('user', $user->getUsername()) // Configures a new claim, called "uid"
+        return (new Builder())
+            ->issuedAt($timeStamp)
+            ->expiresAt($expirationTimeStamp)
+            ->withClaim('user', $user->getUsername())
             ->getToken($this->signer,  $this->privateKey);
     }
 
