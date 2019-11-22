@@ -32,7 +32,7 @@ abstract class Person
     /**
      * @return DateTime
      */
-    public function getBirthDate(): DateTime
+    public function getBirthDate(): ?DateTime
     {
         return $this->birthDate;
     }

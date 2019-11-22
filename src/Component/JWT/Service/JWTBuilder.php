@@ -49,6 +49,11 @@ class JWTBuilder
         $this->signer = new Sha256();
     }
 
+    /**
+     * @param UserInterface $user
+     * @return Token
+     * @throws \Exception
+     */
     public function buildToken(UserInterface $user): Token
     {
         $timeStamp = (new \DateTime())->getTimestamp();
