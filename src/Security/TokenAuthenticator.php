@@ -16,18 +16,12 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var GuardianRepository
-     */
-    protected $guardianRepository;
-
-    /**
      * @var JWTBuilder
      */
     protected $jwtBuilder;
 
-    public function __construct(GuardianRepository $guardianRepository, JWTBuilder $jwtBuilder)
+    public function __construct(JWTBuilder $jwtBuilder)
     {
-        $this->guardianRepository = $guardianRepository;
         $this->jwtBuilder = $jwtBuilder;
     }
 
@@ -72,7 +66,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
         $username = $this->jwtBuilder->getUsername($token);
 
-        return $this->guardianRepository->findOneBy(['email' => $username]);
+        return $userProvider->loadUserByUsername($username);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
