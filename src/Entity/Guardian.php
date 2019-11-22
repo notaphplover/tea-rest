@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\GuardianRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=GuardianRepository::class)
@@ -15,10 +14,6 @@ class Guardian extends Person implements UserInterface
 {
      /**
       * @ORM\Column(type="text", length=65535, nullable=true)
-      * @Assert\Length(
-      *     max=65535,
-      *     maxMessage="your message"
-      * )
       */
      private $apiToken;
 

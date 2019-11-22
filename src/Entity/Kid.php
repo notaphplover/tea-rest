@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Kid extends Person
 {
     /**
+     * @ORM\ManyToOne(targetEntity=Guardian::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @var Guardian
+     */
+    private $guardian;
+
+    /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,6 +31,14 @@ class Kid extends Person
      * @var string
      */
     private $nick;
+
+    /**
+     * @return Guardian
+     */
+    public function getGuardian(): Guardian
+    {
+        return $this->guardian;
+    }
 
     /**
      * @return int
@@ -42,8 +57,18 @@ class Kid extends Person
     }
 
     /**
+     * @param Guardian $guardian
+     * @return $this
+     */
+    public function setGuardian(Guardian $guardian): Kid
+    {
+        $this->guardian = $guardian;
+        return $this;
+    }
+
+    /**
      * @param string $nick
-     * @return Kid
+     * @return $this
      */
     public function setNick(string $nick): Kid
     {

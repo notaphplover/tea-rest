@@ -1,0 +1,14 @@
+App\Entity\Kid:
+    attributes:
+        birthDate:
+            groups: ["kid-common", "kid-full"]
+        id:
+            groups: ["kid-id", "kid-common", "kid-full"]
+        guardian:
+            groups: ["kid-full"]
+        name:
+            groups: ["kid-common", "kid-full"]
+        nick:
+            groups: ["kid-common", "kid-full"]
+        surname:
+            groups: ["kid-common", "kid-full"]

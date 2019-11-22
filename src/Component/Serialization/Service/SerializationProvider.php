@@ -4,6 +4,7 @@
 namespace App\Component\Serialization\Service;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -15,9 +16,9 @@ class SerializationProvider
      */
     protected $serializer;
 
-    public function __construct()
+    public function __construct(ClassMetadataFactoryInterface $classMetadataFactory)
     {
-        $this->serializer = new Serializer([new DateTimeNormalizer(), new ObjectNormalizer()], [new JsonEncoder()]);
+        $this->serializer = new Serializer([new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory)], [new JsonEncoder()]);
     }
 
     /**

@@ -8,5 +8,10 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
 
+    serializer:
+        enabled: true
+        mapping:
+            paths: ['%kernel.project_dir%/config/serialization/']
+
     templating:
         engines: ['twig']

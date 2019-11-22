@@ -1,0 +1,10 @@
+App\Entity\Guardian:
+    attributes:
+        birthDate:
+            groups: ["guardian-common", "guardian-full"]
+        email:
+            groups: ["guardian-full"]
+        id:
+            groups: ["guardian-id", "guardian-common", "guardian-full"]
+        surname:
+            groups: ["kid-common", "kid-full"]
