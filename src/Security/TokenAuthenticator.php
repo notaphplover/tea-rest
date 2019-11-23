@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Component\Auth\Exception\InvalidTokenException;
 use App\Component\JWT\Service\JWTBuilder;
-use App\Repository\GuardianRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +15,8 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+    private const HTTP_HEADER_FIELD = 'X-AUTH-TOKEN';
+
     /**
      * @var JWTBuilder
      */
@@ -32,12 +33,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request): bool
     {
-        return $request->headers->has('X-AUTH-TOKEN');
+        return $request->headers->has(self::HTTP_HEADER_FIELD);
     }
 
     public function getCredentials(Request $request): array
     {
-        $tokenStr = $request->headers->get('X-AUTH-TOKEN');
+        $tokenStr = $request->headers->get(self::HTTP_HEADER_FIELD);
         return [
             'token' => null === $tokenStr ? null : $this->jwtBuilder->parseToken($tokenStr),
         ];
