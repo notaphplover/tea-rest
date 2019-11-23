@@ -36,6 +36,13 @@ class LoginHandler
      */
     protected $passwordEncoder;
 
+    /**
+     * LoginHandler constructor.
+     * @param GuardianManager $guardianManager
+     * @param JWTBuilder $jwtBuilder
+     * @param LoginValidation $loginValidation
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
     public function __construct(
         GuardianManager $guardianManager,
         JWTBuilder $jwtBuilder,

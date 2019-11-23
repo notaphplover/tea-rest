@@ -56,8 +56,7 @@ class KidController extends AbstractFOSRestController
         $content = $this->parseJsonFromRequest($request);
         /** @var $user Guardian */
         $user = $this->getUser();
-        $command = CreateKidCommand::fromArrayAndGuardian($content, $user);
-        $kid = $createKidHandler->handle($command);
+        $kid = $createKidHandler->handle($content, $user);
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
                 $kid,
