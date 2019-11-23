@@ -35,6 +35,7 @@ class AuthController extends AbstractFOSRestController
      * @throws InvalidCredentialsException
      * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
      * @throws \App\Component\Validation\Exception\MissingBodyException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
      */
     public function logInAction(
         Request $request,
@@ -43,7 +44,7 @@ class AuthController extends AbstractFOSRestController
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
-        $token = $loginHandler->handle(LoginCommand::fromArray($content));
+        $token = $loginHandler->handle($content);
         return $this->getTokenResponse((string)$token);
     }
 
