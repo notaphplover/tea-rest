@@ -29,6 +29,7 @@ class AuthController extends AbstractFOSRestController
      * @param LoginHandler $loginHandler
      * @param SerializationProvider $serializationProvider
      * @return JsonResponse
+     * @throws InvalidCredentialsException
      */
     public function logInAction(
         Request $request,
@@ -38,12 +39,7 @@ class AuthController extends AbstractFOSRestController
     {
         $content = json_decode($request->getContent(), true);
         $user = $loginHandler->handle(LoginCommand::fromArray($content));
-
-        if (null === $user) {
-            throw new InvalidCredentialsException();
-        } else {
-            return $this->getTokenResponse($user);
-        }
+        return $this->getTokenResponse($user);
     }
 
     /**

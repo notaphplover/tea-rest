@@ -27,7 +27,7 @@ class Kid extends Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, unique=true)
      * @var string
      */
     private $nick;

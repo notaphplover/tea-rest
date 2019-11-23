@@ -4,6 +4,7 @@
 namespace App\Component\Person\Handler;
 
 
+use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\Person\Command\LoginCommand;
 use App\Component\Person\Service\GuardianManager;
 use App\Entity\Guardian;
@@ -27,9 +28,21 @@ class LoginHandler
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function handle(LoginCommand $command): ?Guardian
+    /**
+     * @param LoginCommand $command
+     * @return Guardian
+     * @throws InvalidCredentialsException
+     */
+    public function handle(LoginCommand $command): Guardian
     {
         $user = $this->guardianManager->getByEmail($command->getUsername());
-        return $this->passwordEncoder->isPasswordValid($user, $command->getPassword()) ? $user : null;
+        if (!$user) {
+            throw new InvalidCredentialsException();
+        }
+        $passwordValid = $this->passwordEncoder->isPasswordValid($user, $command->getPassword());
+        if (!$passwordValid) {
+            throw new InvalidCredentialsException();
+        }
+        return $user;
     }
 }
