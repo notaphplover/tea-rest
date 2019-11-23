@@ -15,10 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class JWTBuilder
 {
     /**
-     * @var int
-     */
-    protected $expirationSecs;
-    /**
      * @var Key
      */
     protected $privateKey;
@@ -38,7 +34,6 @@ class JWTBuilder
     public function __construct(ContainerBagInterface $params)
     {
         $prefix = 'file://'.__DIR__.'/../../../../';
-        $this->expirationSecs = (int)$params->get('jwt_cert_expiration_secs');
         $this->privateKey = new Key(
             $prefix . $params->get('jwt_cert_private_path'),
             $params->get('jwt_cert_secret')
@@ -58,10 +53,8 @@ class JWTBuilder
     public function buildToken(UserInterface $user): Token
     {
         $timeStamp = (new \DateTime())->getTimestamp();
-        $expirationTimeStamp = $timeStamp + $this->expirationSecs;
         return (new Builder())
             ->issuedAt($timeStamp)
-            ->expiresAt($expirationTimeStamp)
             ->withClaim('user', $user->getUsername())
             ->getToken($this->signer,  $this->privateKey);
     }
