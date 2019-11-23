@@ -39,7 +39,7 @@ class CreateKidHandler
         try {
             $this->kidManager->update($kid);
         } catch (UniqueConstraintViolationException $exception) {
-            throw new KidAlreadyExistsException($kid);
+            throw new KidAlreadyExistsException($kid, $exception);
         }
 
         return $kid;

@@ -79,7 +79,6 @@ class JWTBuilder
         } catch (\Exception $exception) {
             return null;
         }
-
     }
 
     /**

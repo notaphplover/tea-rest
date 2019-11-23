@@ -58,6 +58,7 @@ class AuthController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
      */
     public function registerAction(
         Request $request,
@@ -66,7 +67,7 @@ class AuthController extends AbstractFOSRestController
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
-        $token = $registerHandler->handle(RegisterCommand::fromArray($content));
+        $token = $registerHandler->handle($content);
         return $this->getTokenResponse((string)$token);
     }
 
