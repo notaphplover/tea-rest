@@ -51,7 +51,7 @@ class RegisterCommand
     public static function fromArray(array $data): RegisterCommand
     {
         return new self(
-            $data['birthDate'] ?? null,
+            null === $data['birthdate'] ? null : new DateTime($data['birthdate']),
             $data['email'],
             $data['name'],
             $data['surname'],
