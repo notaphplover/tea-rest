@@ -9,7 +9,8 @@ class InvalidJsonFormatException extends BaseHttpException
 {
     private const ERROR_CODE = 3001;
 
-    public function __construct(\Throwable $previous = null) {
+    public function __construct(\Throwable $previous = null)
+    {
         parent::__construct(
             'Invalid JSON input provided',
             self::ERROR_CODE,

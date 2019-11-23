@@ -10,7 +10,8 @@ class KidAlreadyExistsException extends BaseHttpException
 {
     private const ERROR_CODE = 2000;
 
-    public function __construct(Kid $kid, \Throwable $previous = null) {
+    public function __construct(Kid $kid, \Throwable $previous = null)
+    {
         parent::__construct(
             sprintf(
                 'A kid is already associated to the nick provided (%s). Please choose a different one',

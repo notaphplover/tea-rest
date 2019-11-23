@@ -11,7 +11,8 @@ class InvalidCredentialsException extends BaseHttpException
 {
     private const ERROR_CODE = 1000;
 
-    public function __construct(Throwable $previous = null) {
+    public function __construct(Throwable $previous = null)
+    {
         parent::__construct(
             'Invalid credentials',
             self::ERROR_CODE,

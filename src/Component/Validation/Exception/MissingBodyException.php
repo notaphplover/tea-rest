@@ -9,7 +9,8 @@ class MissingBodyException extends BaseHttpException
 {
     private const ERROR_CODE = 3000;
 
-    public function __construct(\Throwable $previous = null) {
+    public function __construct(\Throwable $previous = null)
+    {
         parent::__construct(
             'A body was expected, but none was found',
             self::ERROR_CODE,
