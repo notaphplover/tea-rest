@@ -13,7 +13,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method isManaged(GuardianKidRelation $entity) : bool
  * @method update(GuardianKidRelation $entity, bool $commit = true) : void
  */
-class GuardianKidRelationRepository extends BaseRepository
+class GuardianKidRelationRepository extends GuardianKidRelationBaseRepository
 {
     /**
      * GuardianKidRelationRepository constructor.
