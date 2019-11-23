@@ -24,6 +24,8 @@ use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
  */
 class AuthController extends AbstractFOSRestController
 {
+    use ControllerHelper;
+
     /**
      * @Rest\Post("/login")
      * @param Request $request
@@ -31,6 +33,8 @@ class AuthController extends AbstractFOSRestController
      * @param SerializationProvider $serializationProvider
      * @return JsonResponse
      * @throws InvalidCredentialsException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
      */
     public function logInAction(
         Request $request,
@@ -38,7 +42,7 @@ class AuthController extends AbstractFOSRestController
         SerializationProvider $serializationProvider
     ): JsonResponse
     {
-        $content = json_decode($request->getContent(), true);
+        $content = $this->parseJsonFromRequest($request);
         $token = $loginHandler->handle(LoginCommand::fromArray($content));
         return $this->getTokenResponse((string)$token);
     }
@@ -50,6 +54,8 @@ class AuthController extends AbstractFOSRestController
      * @param RegisterHandler $registerHandler
      * @return JsonResponse
      * @throws \App\Component\Auth\Exception\UserAlreadyExistsException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -59,7 +65,7 @@ class AuthController extends AbstractFOSRestController
         RegisterHandler $registerHandler
     ): JsonResponse
     {
-        $content = json_decode($request->getContent(), true);
+        $content = $this->parseJsonFromRequest($request);
         $token = $registerHandler->handle(RegisterCommand::fromArray($content));
         return $this->getTokenResponse((string)$token);
     }

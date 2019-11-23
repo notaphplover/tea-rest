@@ -4,14 +4,15 @@ namespace App\Controller;
 
 use App\Component\Person\Command\CreateKidCommand;
 use App\Component\Person\Handler\CreateKidHandler;
-use App\Component\Person\Service\KidManager;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\Guardian;
+use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,7 +22,21 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class KidController extends AbstractFOSRestController
 {
+    use ControllerHelper;
+
     /**
+     * @SWG\Post(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It creates new kid and associates it to the current user.",
+     *     @SWG\Response(
+     *          response="200",
+     *          description="The kid was created successfully.",
+     *          @Model(type=Kid::class, groups={"kid-common"})
+     *     )
+     *  )
+     *
      * @Rest\Post("/kid")
      *
      * @param CreateKidHandler $createKidHandler
@@ -38,7 +53,7 @@ class KidController extends AbstractFOSRestController
         SerializationProvider $serializationProvider
     ): JsonResponse
     {
-        $content = json_decode($request->getContent(), true);
+        $content = $this->parseJsonFromRequest($request);
         /** @var $user Guardian */
         $user = $this->getUser();
         $command = CreateKidCommand::fromArrayAndGuardian($content, $user);
