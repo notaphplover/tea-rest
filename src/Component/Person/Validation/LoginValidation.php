@@ -18,7 +18,10 @@ class LoginValidation extends BaseValidation
         parent::__construct(
             new Assert\Collection([
                 self::FIELD_EMAIL => new Assert\Email(),
-                self::FIELD_PASSWORD => new Assert\Required(),
+                self::FIELD_PASSWORD => [
+                    new Assert\Type(['type' => ['string']]),
+                    new Assert\Required(),
+                ],
             ])
         );
     }

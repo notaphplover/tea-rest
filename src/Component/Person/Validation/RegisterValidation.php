@@ -21,11 +21,23 @@ class RegisterValidation extends BaseValidation
     {
         parent::__construct(
             new Assert\Collection([
-                self::FIELD_BIRTHDATE => new Assert\Optional(new DateTimeStringConstraint()),
+                self::FIELD_BIRTHDATE => new Assert\Optional([
+                    new Assert\Type(['type' => ['string']]),
+                    new DateTimeStringConstraint(),
+                ]),
                 self::FIELD_EMAIL => new Assert\Email(),
-                self::FIELD_NAME => new Assert\Length(['max' => 40]),
-                self::FIELD_SURNAME => new Assert\Length(['max' => 40]),
-                self::FIELD_PASSWORD => new Assert\Length(['min' => 8]),
+                self::FIELD_NAME => [
+                    new Assert\Type(['type' => ['string']]),
+                    new Assert\Length(['max' => 40]),
+                ],
+                self::FIELD_SURNAME => [
+                    new Assert\Type(['type' => ['string']]),
+                    new Assert\Length(['max' => 40]),
+                ],
+                self::FIELD_PASSWORD => [
+                    new Assert\Type(['type' => ['string']]),
+                    new Assert\Length(['min' => 8]),
+                ],
             ])
         );
     }
