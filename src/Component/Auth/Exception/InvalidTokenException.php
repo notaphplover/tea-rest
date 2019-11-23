@@ -1,19 +1,17 @@
 <?php
 
-
 namespace App\Component\Auth\Exception;
 
 use App\Component\Common\Exception\BaseHttpException;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
-class InvalidCredentialsException extends BaseHttpException
+class InvalidTokenException extends BaseHttpException
 {
-    private const ERROR_CODE = 1000;
+    private const ERROR_CODE = 1002;
 
-    public function __construct(Throwable $previous = null) {
+    public function __construct(\Throwable $previous = null) {
         parent::__construct(
-            'Invalid credentials',
+            'The token provided is not valid. Please log in again to obtain a new one',
             self::ERROR_CODE,
             Response::HTTP_FORBIDDEN,
             $previous

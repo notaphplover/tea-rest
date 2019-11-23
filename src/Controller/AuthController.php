@@ -12,6 +12,7 @@ use App\Entity\Guardian;
 use App\Security\TokenAuthenticator;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Lcobucci\JWT\Token;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
@@ -38,44 +39,37 @@ class AuthController extends AbstractFOSRestController
     ): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
-        $user = $loginHandler->handle(LoginCommand::fromArray($content));
-        return $this->getTokenResponse($user);
+        $token = $loginHandler->handle(LoginCommand::fromArray($content));
+        return $this->getTokenResponse((string)$token);
     }
 
     /**
      * @Rest\Post("/register")
      * @param Request $request
      * @param TokenAuthenticator $tokenAuthenticator
-     * @param GuardAuthenticatorHandler $guardHandler
      * @param RegisterHandler $registerHandler
      * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\UserAlreadyExistsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function registerAction(
         Request $request,
         TokenAuthenticator $tokenAuthenticator,
-        GuardAuthenticatorHandler $guardHandler,
         RegisterHandler $registerHandler
     ): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
-        $user = $registerHandler->handle(RegisterCommand::fromArray($content));
-
-        $guardHandler->authenticateUserAndHandleSuccess(
-            $user,
-            $request,
-            $tokenAuthenticator,
-            'main'
-        );
-
-        return $this->getTokenResponse($user);
+        $token = $registerHandler->handle(RegisterCommand::fromArray($content));
+        return $this->getTokenResponse((string)$token);
     }
 
     /**
-     * @param Guardian $guardian
+     * @param string $token
      * @return JsonResponse
      */
-    private function getTokenResponse(Guardian $guardian): JsonResponse
+    private function getTokenResponse(string $token): JsonResponse
     {
-        return new JsonResponse(['token' => $guardian->getApiToken()]);
+        return new JsonResponse(['token' => $token]);
     }
 }

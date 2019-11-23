@@ -5,9 +5,11 @@ namespace App\Component\Person\Handler;
 
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
+use App\Component\JWT\Service\JWTBuilder;
 use App\Component\Person\Command\LoginCommand;
 use App\Component\Person\Service\GuardianManager;
 use App\Entity\Guardian;
+use Lcobucci\JWT\Token;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LoginHandler
@@ -18,22 +20,32 @@ class LoginHandler
     protected $guardianManager;
 
     /**
+     * @var JWTBuilder
+     */
+    protected $jwtBuilder;
+
+    /**
      * @var UserPasswordEncoderInterface
      */
     protected $passwordEncoder;
 
-    public function __construct(GuardianManager $guardianManager, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    public function __construct(
+        GuardianManager $guardianManager,
+        JWTBuilder $jwtBuilder,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
         $this->guardianManager = $guardianManager;
+        $this->jwtBuilder = $jwtBuilder;
         $this->passwordEncoder = $passwordEncoder;
     }
 
     /**
      * @param LoginCommand $command
-     * @return Guardian
+     * @return Token
      * @throws InvalidCredentialsException
+     * @throws \Exception
      */
-    public function handle(LoginCommand $command): Guardian
+    public function handle(LoginCommand $command): Token
     {
         $user = $this->guardianManager->getByEmail($command->getUsername());
         if (!$user) {
@@ -43,6 +55,7 @@ class LoginHandler
         if (!$passwordValid) {
             throw new InvalidCredentialsException();
         }
-        return $user;
+
+        return $this->jwtBuilder->buildToken($user);
     }
 }

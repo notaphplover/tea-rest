@@ -2,10 +2,13 @@
 
 namespace App\Component\Person\Handler;
 
+use App\Component\Auth\Exception\UserAlreadyExistsException;
 use App\Component\JWT\Service\JWTBuilder;
 use App\Component\Person\Command\RegisterCommand;
 use App\Component\Person\Service\GuardianManager;
 use App\Entity\Guardian;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Lcobucci\JWT\Token;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterHandler
@@ -33,7 +36,15 @@ class RegisterHandler
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function handle(RegisterCommand $command): Guardian
+    /**
+     * @param RegisterCommand $command
+     * @return Token
+     * @throws UserAlreadyExistsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
+     */
+    public function handle(RegisterCommand $command): Token
     {
         $guardian = (new Guardian())
             ->setBirthDate($command->getBirthDate())
@@ -43,11 +54,14 @@ class RegisterHandler
         ;
 
         $guardian
-            ->setApiToken((string)$this->jwtBuilder->buildToken($guardian))
             ->setPassword($this->passwordEncoder->encodePassword($guardian, $command->getPassword()))
         ;
 
-        $this->guardianManager->update($guardian);
-        return $guardian;
+        try {
+            $this->guardianManager->update($guardian);
+        } catch (UniqueConstraintViolationException $exception) {
+            throw new UserAlreadyExistsException($guardian);
+        }
+        return $this->jwtBuilder->buildToken($guardian);
     }
 }

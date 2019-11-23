@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Component\Auth\Exception\InvalidTokenException;
 use App\Component\JWT\Service\JWTBuilder;
 use App\Repository\GuardianRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,34 +37,38 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request): array
     {
+        $tokenStr = $request->headers->get('X-AUTH-TOKEN');
         return [
-            'token' => $request->headers->get('X-AUTH-TOKEN'),
+            'token' => null === $tokenStr ? null : $this->jwtBuilder->parseToken($tokenStr),
         ];
     }
 
+    /**
+     * @param mixed $credentials
+     * @param UserInterface $user
+     * @return bool
+     * @throws InvalidTokenException
+     */
     public function checkCredentials($credentials, UserInterface $user): bool
     {
+        $token = $credentials['token'];
+        if (null === $token) {
+            return false;
+        }
+
+        if (!$this->jwtBuilder->validateToken($token)) {
+            throw new InvalidTokenException();
+        }
+
         return true;
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $apiToken = $credentials['token'];
-
-        if (null === $apiToken) {
-            return;
-        }
-
-        $token = $this->jwtBuilder->parseToken($apiToken);
-
+        $token = $credentials['token'];
         if (null === $token) {
             return;
         }
-
-        if (!$this->jwtBuilder->validateToken($token)) {
-            return;
-        }
-
         $username = $this->jwtBuilder->getUsername($token);
 
         return $userProvider->loadUserByUsername($username);

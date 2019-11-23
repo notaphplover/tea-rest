@@ -8,6 +8,7 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\ValidationData;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -94,6 +95,7 @@ class JWTBuilder
      */
     public function validateToken(Token $token): bool
     {
-        return $token->verify($this->signer, $this->publicKey);
+        return $token->verify($this->signer, $this->publicKey)
+            && $token->validate(new ValidationData());
     }
 }
