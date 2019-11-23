@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Guardian;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -11,25 +10,17 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @package App\Repository
  *
  * @method findOneBy(array $criteria, array $orderBy = null): ?Guardian
+ * @method isManaged(Guardian $entity) : bool
+ * @method update(Guardian $entity, bool $commit = true) : void
  */
-class GuardianRepository extends ServiceEntityRepository
+class GuardianRepository extends BaseRepository
 {
+    /**
+     * GuardianRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Guardian::class);
-    }
-
-    /**
-     * @param Guardian $guardian
-     * @param bool $commit
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function update(Guardian $guardian, bool $commit = true): void
-    {
-        $this->_em->persist($guardian);
-        if ($commit) {
-            $this->_em->flush();
-        }
     }
 }

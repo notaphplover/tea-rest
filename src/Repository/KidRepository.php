@@ -3,10 +3,17 @@
 namespace App\Repository;
 
 use App\Entity\Kid;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
-class KidRepository extends ServiceEntityRepository
+/**
+ * Class KidRepository
+ * @package App\Repository
+ *
+ * @method findOneBy(array $criteria, array $orderBy = null): ?Kid
+ * @method isManaged(Kid $entity) : bool
+ * @method update(Kid $entity, bool $commit = true) : void
+ */
+class KidRepository extends BaseRepository
 {
     /**
      * KidRepository constructor.
@@ -15,19 +22,5 @@ class KidRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Kid::class);
-    }
-
-    /**
-     * @param Kid $kid
-     * @param bool $commit
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function update(Kid $kid, bool $commit = true): void
-    {
-        $this->_em->persist($kid);
-        if ($commit) {
-            $this->_em->flush();
-        }
     }
 }
