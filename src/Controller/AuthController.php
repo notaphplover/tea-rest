@@ -8,14 +8,12 @@ use App\Component\Person\Command\RegisterCommand;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
-use App\Entity\Guardian;
 use App\Security\TokenAuthenticator;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Lcobucci\JWT\Token;
+use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
  * @Rest\Route("/api/auth", name="api_kid")
@@ -27,6 +25,47 @@ class AuthController extends AbstractFOSRestController
     use ControllerHelper;
 
     /**
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"email", "password"},
+     *              @SWG\Property(
+     *                  property="email",
+     *                  type="string",
+     *                  example="mail@sample.com",
+     *                  description="User's email."
+     *              ),
+     *              @SWG\Property(
+     *                  property="password",
+     *                  type="string",
+     *                  example="MyS3cretP@ssword",
+     *                  description="User's password."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/login")
      * @param Request $request
      * @param LoginHandler $loginHandler
@@ -49,6 +88,65 @@ class AuthController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It creates new user.",
+     *     @SWG\Parameter(
+     *          name="registerData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"email", "name", "password", "surname"},
+     *              @SWG\Property(
+     *                  property="birthdate",
+     *                  type="string",
+     *                  example="2010-11-22T18:26:55.366Z",
+     *                  description="User's birth date"
+     *              ),
+     *              @SWG\Property(
+     *                  property="email",
+     *                  type="string",
+     *                  example="mail@sample.com",
+     *                  description="User's email. This email will be the username's user"
+     *              ),
+     *              @SWG\Property(
+     *                  property="name",
+     *                  type="string",
+     *                  example="Alice",
+     *                  description="User's name"
+     *              ),
+     *              @SWG\Property(
+     *                  property="password",
+     *                  type="string",
+     *                  example="MyS3cretP@ssword",
+     *                  description="User's password."
+     *              ),
+     *              @SWG\Property(
+     *                  property="surname",
+     *                  type="string",
+     *                  example="Smith",
+     *                  description="User's surname"
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the user created.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/register")
      * @param Request $request
      * @param TokenAuthenticator $tokenAuthenticator

@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Component\Person\Command\CreateKidCommand;
 use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\Guardian;
@@ -30,6 +29,40 @@ class KidController extends AbstractFOSRestController
      *     security={{"ApiToken": {}}},
      *     consumes={"application/json"},
      *     description="It creates new kid and associates it to the current user.",
+     *     @SWG\Parameter(
+     *          name="createKidData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"name", "nick", "surname"},
+     *              @SWG\Property(
+     *                  property="birthdate",
+     *                  type="string",
+     *                  example="2010-11-22T18:26:55.366Z",
+     *                  description="Kid's birth date"
+     *              ),
+     *              @SWG\Property(
+     *                  property="name",
+     *                  type="string",
+     *                  example="Alice",
+     *                  description="Kid's name"
+     *              ),
+     *              @SWG\Property(
+     *                  property="nick",
+     *                  type="string",
+     *                  example="Alice00124",
+     *                  description="Kid's nickname in the app"
+     *              ),
+     *              @SWG\Property(
+     *                  property="surname",
+     *                  type="string",
+     *                  example="Smith",
+     *                  description="Kid's surname"
+     *              )
+     *          )
+     *     ),
      *     @SWG\Response(
      *          response="200",
      *          description="The kid was created successfully.",
