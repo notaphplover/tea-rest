@@ -9,7 +9,8 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * Class GuardianKidRelationRepository
  * @package App\Repository
  *
- * @method findOneBy(array $criteria, array $orderBy = null): ?GuardianKidRelation
+ * @method findOneBy(array $criteria, array $orderBy = null): ?GuardianKidPendingRelation
+ * @method getOneByGuardianAndKid(int $guardianId, int $kidId) : ?GuardianKidPendingRelation
  * @method isManaged(GuardianKidPendingRelation $entity) : bool
  * @method update(GuardianKidPendingRelation $entity, bool $commit = true) : void
  */
