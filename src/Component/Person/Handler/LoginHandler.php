@@ -1,16 +1,12 @@
 <?php
 
-
 namespace App\Component\Person\Handler;
-
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\JWT\Service\JWTBuilder;
-use App\Component\Person\Command\LoginCommand;
 use App\Component\Person\Service\GuardianManager;
 use App\Component\Person\Validation\LoginValidation;
 use App\Component\Validation\Exception\InvalidInputException;
-use App\Entity\Guardian;
 use Lcobucci\JWT\Token;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
