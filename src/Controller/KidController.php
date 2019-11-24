@@ -6,6 +6,7 @@ use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\Guardian;
+use App\Entity\GuardianKidPendingRelation;
 use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -101,6 +102,37 @@ class KidController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Post(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It creates a new pending association between a kid and the current user.",
+     *     @SWG\Parameter(
+     *          name="createKidAssociationData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"nick"},
+     *              @SWG\Property(
+     *                  property="nick",
+     *                  type="string",
+     *                  example="Alice00124",
+     *                  description="Kid's nickname"
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="The pending relation was created.",
+     *          @Model(
+     *              type=GuardianKidPendingRelation::class,
+     *              groups={"pending-relation-full", "guardian-id", "kid-id"}
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/association")
      *
      * @param KidAssociationRequestHandler $kidAssociationRequestHandler
