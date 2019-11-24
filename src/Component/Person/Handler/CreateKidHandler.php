@@ -2,7 +2,6 @@
 
 namespace App\Component\Person\Handler;
 
-use App\Component\Person\Command\CreateKidCommand;
 use App\Component\Person\Exception\KidAlreadyExistsException;
 use App\Component\Person\Service\KidManager;
 use App\Component\Person\Validation\CreateKidValidation;

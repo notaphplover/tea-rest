@@ -1,0 +1,8 @@
+App\Entity\GuardianKidPendingRelation:
+    attributes:
+        id:
+            groups: ["pending-relation-id", "pending-relation-full"]
+        guardian:
+            groups: ["pending-relation-full"]
+        kid:
+            groups: ["pending-relation-full"]
