@@ -38,13 +38,13 @@ class KidAssociationRequestHandler
     /**
      * KidAssociationRequestHandler constructor.
      * @param GuardianKidPendingRelationManager $guardianKidPendingRelationManager
-     * @param GuardianKidPendingRelationManager $guardianKidRelationManager
+     * @param GuardianKidRelationManager $guardianKidRelationManager
      * @param KidAssociationRequestValidation $kidAssociationRequestValidation
      * @param KidManager $kidManager
      */
     public function __construct(
         GuardianKidPendingRelationManager $guardianKidPendingRelationManager,
-        GuardianKidPendingRelationManager $guardianKidRelationManager,
+        GuardianKidRelationManager $guardianKidRelationManager,
         KidAssociationRequestValidation $kidAssociationRequestValidation,
         KidManager $kidManager
     ) {
@@ -90,5 +90,7 @@ class KidAssociationRequestHandler
         } catch (UniqueConstraintViolationException $exception) {
             throw new KidAssociationRequestAlreadyExists($guardian, $kid, $exception);
         }
+
+        return $relation;
     }
 }

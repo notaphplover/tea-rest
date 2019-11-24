@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Component\Person\Handler\CreateKidHandler;
+use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\Guardian;
 use App\Entity\Kid;
@@ -70,7 +71,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Post("/kid")
+     * @Rest\Post("")
      *
      * @param CreateKidHandler $createKidHandler
      * @param Request $request
@@ -95,6 +96,40 @@ class KidController extends AbstractFOSRestController
                 $kid,
                 'json',
                 ['groups' => ['kid-common']]
+            )
+        );
+    }
+
+    /**
+     * @Rest\Post("/association")
+     *
+     * @param KidAssociationRequestHandler $kidAssociationRequestHandler
+     * @param Request $request
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Person\Exception\KidAssociationAlreadyExists
+     * @throws \App\Component\Person\Exception\KidAssociationRequestAlreadyExists
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function requestKidAssociationAction(
+        KidAssociationRequestHandler $kidAssociationRequestHandler,
+        Request $request,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        /** @var $user Guardian */
+        $user = $this->getUser();
+        $relation = $kidAssociationRequestHandler->handle($content, $user);
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relation,
+                'json',
+                ['groups' => ['pending-relation-full', 'guardian-id', 'kid-id']]
             )
         );
     }
