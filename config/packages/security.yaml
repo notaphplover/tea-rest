@@ -11,16 +11,8 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        auth:
-            anonymous: true
-            pattern: ^/api/auth
-            guard:
-                authenticators:
-                    - App\Security\TokenAuthenticator
-            provider: app_user_provider
-            stateless: true
         main:
-            anonymous: false
+            anonymous: ~
             guard:
                 authenticators:
                     - App\Security\TokenAuthenticator

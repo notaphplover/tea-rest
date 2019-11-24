@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Component\Auth\Entity\TokenUser;
 use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -89,9 +90,9 @@ class KidController extends AbstractFOSRestController
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
-        /** @var $user Guardian */
+        /** @var $user TokenUser */
         $user = $this->getUser();
-        $kid = $createKidHandler->handle($content, $user);
+        $kid = $createKidHandler->handle($content, $user->getId());
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
                 $kid,
@@ -154,9 +155,9 @@ class KidController extends AbstractFOSRestController
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
-        /** @var $user Guardian */
+        /** @var $user TokenUser */
         $user = $this->getUser();
-        $relation = $kidAssociationRequestHandler->handle($content, $user);
+        $relation = $kidAssociationRequestHandler->handle($content, $user->getId());
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
                 $relation,

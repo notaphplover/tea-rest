@@ -2,23 +2,25 @@
 
 namespace App\Component\Person\Service;
 
+use App\Component\Common\Service\BaseManager;
 use App\Entity\GuardianKidRelationBase;
 use App\Repository\GuardianKidRelationBaseRepository;
 
-abstract class GuardianKidRelationBaseManager
+/**
+ * Class GuardianKidRelationBaseManager
+ *
+ * @method GuardianKidRelationBaseRepository getEntityRepository()
+ * @method GuardianKidRelationBase getReference($id)
+ */
+abstract class GuardianKidRelationBaseManager extends BaseManager
 {
-    /**
-     * @var GuardianKidRelationBaseRepository
-     */
-    protected $guardianKidRelationBaseRepository;
-
     /**
      * GuardianKidRelationBaseManager constructor.
      * @param GuardianKidRelationBaseRepository $guardianKidRelationBaseRepository
      */
     public function __construct(GuardianKidRelationBaseRepository $guardianKidRelationBaseRepository)
     {
-        $this->guardianKidRelationBaseRepository = $guardianKidRelationBaseRepository;
+        parent::__construct($guardianKidRelationBaseRepository);
     }
 
     /**
@@ -28,7 +30,7 @@ abstract class GuardianKidRelationBaseManager
      */
     public function getOneByGuardianAndKid(int $guardianId, int $kidId): ?GuardianKidRelationBase
     {
-        return $this->guardianKidRelationBaseRepository->getOneByGuardianAndKid($guardianId, $kidId);
+        return $this->getEntityRepository()->getOneByGuardianAndKid($guardianId, $kidId);
     }
 
     /**
@@ -39,6 +41,6 @@ abstract class GuardianKidRelationBaseManager
      */
     public function update(GuardianKidRelationBase $guardianKidRelation, bool $commit = true): void
     {
-        $this->guardianKidRelationBaseRepository->update($guardianKidRelation, $commit);
+        $this->getEntityRepository()->update($guardianKidRelation, $commit);
     }
 }

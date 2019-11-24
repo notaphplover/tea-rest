@@ -67,15 +67,15 @@ class LoginHandler
         $email = $data[LoginValidation::FIELD_EMAIL];
         $password = $data[LoginValidation::FIELD_PASSWORD];
 
-        $user = $this->guardianManager->getByEmail($email);
-        if (!$user) {
+        $guardian = $this->guardianManager->getByEmail($email);
+        if (!$guardian) {
             throw new InvalidCredentialsException();
         }
-        $passwordValid = $this->passwordEncoder->isPasswordValid($user, $password);
+        $passwordValid = $this->passwordEncoder->isPasswordValid($guardian, $password);
         if (!$passwordValid) {
             throw new InvalidCredentialsException();
         }
 
-        return $this->jwtBuilder->buildToken($user);
+        return $this->jwtBuilder->buildToken($guardian);
     }
 }

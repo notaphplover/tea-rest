@@ -6,10 +6,10 @@ use App\Component\Person\Exception\KidAssociationAlreadyExists;
 use App\Component\Person\Exception\KidAssociationRequestAlreadyExists;
 use App\Component\Person\Service\GuardianKidPendingRelationManager;
 use App\Component\Person\Service\GuardianKidRelationManager;
+use App\Component\Person\Service\GuardianManager;
 use App\Component\Person\Service\KidManager;
 use App\Component\Person\Validation\KidAssociationRequestValidation;
 use App\Component\Validation\Exception\InvalidInputException;
-use App\Entity\Guardian;
 use App\Entity\GuardianKidPendingRelation;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
@@ -26,6 +26,11 @@ class KidAssociationRequestHandler
     protected $guardianKidRelationManager;
 
     /**
+     * @var GuardianManager
+     */
+    protected $guardianManager;
+
+    /**
      * @var KidAssociationRequestValidation
      */
     protected $kidAssociationRequestValidation;
@@ -39,17 +44,20 @@ class KidAssociationRequestHandler
      * KidAssociationRequestHandler constructor.
      * @param GuardianKidPendingRelationManager $guardianKidPendingRelationManager
      * @param GuardianKidRelationManager $guardianKidRelationManager
+     * @param GuardianManager $guardianManager
      * @param KidAssociationRequestValidation $kidAssociationRequestValidation
      * @param KidManager $kidManager
      */
     public function __construct(
         GuardianKidPendingRelationManager $guardianKidPendingRelationManager,
         GuardianKidRelationManager $guardianKidRelationManager,
+        GuardianManager $guardianManager,
         KidAssociationRequestValidation $kidAssociationRequestValidation,
         KidManager $kidManager
     ) {
         $this->guardianKidPendingRelationManager = $guardianKidPendingRelationManager;
         $this->guardianKidRelationManager = $guardianKidRelationManager;
+        $this->guardianManager = $guardianManager;
         $this->kidAssociationRequestValidation = $kidAssociationRequestValidation;
         $this->kidManager = $kidManager;
     }
@@ -57,7 +65,7 @@ class KidAssociationRequestHandler
 
     /**
      * @param array $data
-     * @param Guardian $guardian
+     * @param int $guardianId
      * @return GuardianKidPendingRelation
      * @throws InvalidInputException
      * @throws KidAssociationAlreadyExists
@@ -65,7 +73,7 @@ class KidAssociationRequestHandler
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function handle(array $data, Guardian $guardian): GuardianKidPendingRelation
+    public function handle(array $data, int $guardianId): GuardianKidPendingRelation
     {
         $validation = $this->kidAssociationRequestValidation->validate($data);
         if ($validation->count() !== 0) {
@@ -74,6 +82,7 @@ class KidAssociationRequestHandler
 
         $kidNickname = $data[KidAssociationRequestValidation::FIELD_NICKNAME];
         $kid = $this->kidManager->getByNick($kidNickname);
+        $guardian = $this->guardianManager->getReference($guardianId);
 
         // Look for current relationships
         if (null != $this->guardianKidRelationManager->getOneByGuardianAndKid($guardian->getId(), $kid->getId())) {

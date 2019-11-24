@@ -2,21 +2,24 @@
 
 namespace App\Component\Person\Service;
 
+use App\Component\Common\Service\BaseManager;
 use App\Entity\GuardianKidRelation;
 use App\Entity\Kid;
 use App\Repository\GuardianKidRelationRepository;
 use App\Repository\KidRepository;
 
-class KidManager
+/**
+ * Class KidManager
+ *
+ * @method KidRepository getEntityRepository()
+ * @method Kid getReference($id)
+ */
+class KidManager extends BaseManager
 {
     /**
      * @var GuardianKidRelationRepository
      */
     protected $guardianKidRelationRepository;
-    /**
-     * @var KidRepository
-     */
-    protected $kidRepository;
 
     /**
      * KidManager constructor.
@@ -27,8 +30,8 @@ class KidManager
         GuardianKidRelationRepository $guardianKidRelationRepository,
         KidRepository $kidRepository
     ) {
+        parent::__construct($kidRepository);
         $this->guardianKidRelationRepository = $guardianKidRelationRepository;
-        $this->kidRepository = $kidRepository;
     }
 
     /**
@@ -37,7 +40,7 @@ class KidManager
      */
     public function getByNick(string $nick): ?Kid
     {
-        return $this->kidRepository->findOneBy(['nick' => $nick]);
+        return $this->getEntityRepository()->findOneBy(['nick' => $nick]);
     }
 
     /**
@@ -48,13 +51,13 @@ class KidManager
      */
     public function update(Kid $entity, bool $commit = true): void
     {
-        if (!$this->kidRepository->isManaged($entity)) {
+        if (!$this->getEntityRepository()->isManaged($entity)) {
             $guardianKidRelation = (new GuardianKidRelation())
                 ->setGuardian($entity->getGuardian())
                 ->setKid($entity)
             ;
             $this->guardianKidRelationRepository->update($guardianKidRelation, false);
         }
-        $this->kidRepository->update($entity, $commit);
+        $this->getEntityRepository()->update($entity, $commit);
     }
 }

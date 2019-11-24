@@ -2,23 +2,25 @@
 
 namespace App\Component\Person\Service;
 
+use App\Component\Common\Service\BaseManager;
 use App\Entity\Guardian;
 use App\Repository\GuardianRepository;
 
-class GuardianManager
+/**
+ * Class GuardianManager
+ *
+ * @method GuardianRepository getEntityRepository()
+ * @method Guardian getReference($id)
+ */
+class GuardianManager extends BaseManager
 {
-    /**
-     * @var GuardianRepository
-     */
-    protected $guardianRepository;
-
     /**
      * GuardianManager constructor.
      * @param GuardianRepository $guardianRepository
      */
     public function __construct(GuardianRepository $guardianRepository)
     {
-        $this->guardianRepository = $guardianRepository;
+        parent::__construct($guardianRepository);
     }
 
     /**
@@ -27,7 +29,7 @@ class GuardianManager
      */
     public function getByEmail(string $email): ?Guardian
     {
-        return $this->guardianRepository->findOneBy(['email' => $email]);
+        return $this->getEntityRepository()->findOneBy(['email' => $email]);
     }
 
     /**
@@ -38,6 +40,6 @@ class GuardianManager
      */
     public function update(Guardian $guardian, bool $commit = true): void
     {
-        $this->guardianRepository->update($guardian, $commit);
+        $this->getEntityRepository()->update($guardian, $commit);
     }
 }
