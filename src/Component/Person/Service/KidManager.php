@@ -18,12 +18,26 @@ class KidManager
      */
     protected $kidRepository;
 
+    /**
+     * KidManager constructor.
+     * @param GuardianKidRelationRepository $guardianKidRelationRepository
+     * @param KidRepository $kidRepository
+     */
     public function __construct(
         GuardianKidRelationRepository $guardianKidRelationRepository,
         KidRepository $kidRepository
     ) {
         $this->guardianKidRelationRepository = $guardianKidRelationRepository;
         $this->kidRepository = $kidRepository;
+    }
+
+    /**
+     * @param string $nick
+     * @return Kid|null
+     */
+    public function getByNick(string $nick): ?Kid
+    {
+        return $this->kidRepository->findOneBy(['nick' => $nick]);
     }
 
     /**
