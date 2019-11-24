@@ -64,6 +64,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
+    /**
+     * @param mixed $credentials
+     * @param UserProviderInterface $userProvider
+     * @return UserInterface|void|null
+     */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = $credentials['token'];
