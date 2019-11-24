@@ -10,6 +10,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @package App\Repository
  *
  * @method findOneBy(array $criteria, array $orderBy = null): ?Guardian
+ * @method getReference(int $id): Guardian
  * @method isManaged(Guardian $entity) : bool
  * @method update(Guardian $entity, bool $commit = true) : void
  */

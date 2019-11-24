@@ -17,6 +17,15 @@ abstract class BaseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $id
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function getReference($id)
+    {
+        $this->_em->getReference($this->_entityName, $id);
+    }
+
+    /**
      * @param $entity
      * @param bool $commit
      * @throws \Doctrine\ORM\ORMException
