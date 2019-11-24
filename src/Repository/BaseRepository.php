@@ -22,7 +22,7 @@ abstract class BaseRepository extends ServiceEntityRepository
      */
     public function getReference($id)
     {
-        $this->_em->getReference($this->_entityName, $id);
+        return $this->_em->getReference($this->_entityName, $id);
     }
 
     /**
