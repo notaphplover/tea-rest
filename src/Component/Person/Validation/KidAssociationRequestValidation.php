@@ -5,7 +5,7 @@ namespace App\Component\Person\Validation;
 use App\Component\Common\Validation\BaseValidation;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class KisAssociationRequestValidation extends BaseValidation
+class KidAssociationRequestValidation extends BaseValidation
 {
     public const FIELD_NICKNAME = 'nick';
 
