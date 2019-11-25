@@ -18,6 +18,7 @@ class KidRepository extends BaseRepository
     /**
      * KidRepository constructor.
      * @param ManagerRegistry $registry
+     * @throws \Doctrine\ORM\Mapping\MappingException
      */
     public function __construct(ManagerRegistry $registry)
     {

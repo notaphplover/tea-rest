@@ -35,6 +35,15 @@ abstract class GuardianKidRelationBaseManager extends BaseManager
     }
 
     /**
+     * @param int $guardianId
+     * @return GuardianKidRelationBase[]
+     */
+    public function getByGuardian(int $guardianId): array
+    {
+        return $this->getEntityRepository()->getByGuardian($guardianId);
+    }
+
+    /**
      * @param int[] $kidIds
      * @param bool $warmUpGuardians
      * @return GuardianKidRelationBase[]
