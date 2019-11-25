@@ -140,6 +140,21 @@ class KidController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets the list of kids associated to the user.",
+     *     @SWG\Response(
+     *          response="200",
+     *          description="List of kids associated to the user.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(type=Kid::class, groups={"kid-full", "guardian-id"})
+     *         )
+     *     )
+     *  )
+     *
      * @Rest\Get("")
      *
      * @param GetKidsOfGuardianHandler $getKidsOfGuardianHandler
