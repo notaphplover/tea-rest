@@ -30,6 +30,6 @@ class KidRepository extends BaseRepository
      */
     public function getByGuardian(int $guardianId): array
     {
-        return $this->findBy(['guardian_id' => $guardianId]);
+        return $this->findBy(['guardian' => $guardianId]);
     }
 }

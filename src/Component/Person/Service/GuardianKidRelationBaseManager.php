@@ -5,6 +5,7 @@ namespace App\Component\Person\Service;
 use App\Component\Common\Service\BaseManager;
 use App\Entity\GuardianKidRelationBase;
 use App\Repository\GuardianKidRelationBaseRepository;
+use App\Repository\GuardianRepository;
 
 /**
  * Class GuardianKidRelationBaseManager
@@ -15,21 +16,41 @@ use App\Repository\GuardianKidRelationBaseRepository;
 abstract class GuardianKidRelationBaseManager extends BaseManager
 {
     /**
+     * @var GuardianRepository
+     */
+    protected $guardianRepository;
+
+    /**
      * GuardianKidRelationBaseManager constructor.
      * @param GuardianKidRelationBaseRepository $guardianKidRelationBaseRepository
+     * @param GuardianRepository $guardianRepository
      */
-    public function __construct(GuardianKidRelationBaseRepository $guardianKidRelationBaseRepository)
-    {
+    public function __construct(
+        GuardianKidRelationBaseRepository $guardianKidRelationBaseRepository,
+        GuardianRepository $guardianRepository
+    ) {
         parent::__construct($guardianKidRelationBaseRepository);
+
+        $this->guardianRepository = $guardianRepository;
     }
 
     /**
      * @param int[] $kidIds
+     * @param bool $warmUpGuardians
      * @return GuardianKidRelationBase[]
      */
-    public function getByKids(array $kidIds): array
+    public function getByKids(array $kidIds, bool $warmUpGuardians = false): array
     {
-        return $this->getEntityRepository()->getByKids($kidIds);
+        $relations = $this->getEntityRepository()->getByKids($kidIds);
+        if ($warmUpGuardians) {
+            $this
+                ->guardianRepository
+                ->getByIds(array_map(
+                    function(GuardianKidRelationBase $relation) { return $relation->getGuardian()->getId(); },
+                    $relations
+                ));
+        }
+        return $relations;
     }
 
     /**

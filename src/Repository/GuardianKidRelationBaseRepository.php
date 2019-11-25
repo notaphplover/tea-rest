@@ -17,7 +17,7 @@ abstract class GuardianKidRelationBaseRepository extends BaseRepository
      */
     public function getByKids(array $kidIds): array
     {
-        if (0 === $this->count($kidIds)) {
+        if (0 === count($kidIds)) {
             return [];
         }
 

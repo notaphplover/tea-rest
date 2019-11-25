@@ -3,9 +3,30 @@
 namespace App\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
+use function Doctrine\ORM\QueryBuilder;
 
 abstract class BaseRepository extends ServiceEntityRepository
 {
+    /**
+     * @var string
+     */
+    protected $idField;
+
+    /**
+     * BaseRepository constructor.
+     * @param ManagerRegistry $registry
+     * @param $entityClass
+     * @throws \Doctrine\ORM\Mapping\MappingException
+     */
+    public function __construct(ManagerRegistry $registry, $entityClass)
+    {
+        parent::__construct($registry, $entityClass);
+
+        $meta = $this->_em->getClassMetadata($entityClass);
+        $this->idField = $meta->getSingleIdentifierFieldName();
+    }
+
     /**
      * Determines if an entity is managed by doctrine.
      * @param $entity
@@ -17,7 +38,24 @@ abstract class BaseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function getByIds(array $ids): array
+    {
+        if (0 === count($ids)) {
+            return [];
+        }
+        $qb = $this->createQueryBuilder('e');
+        return $qb
+            ->where($qb->expr()->in('e.' . $this->idField, $ids))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param $id
+     * @return bool|\Doctrine\Common\Proxy\Proxy|object|null
      * @throws \Doctrine\ORM\ORMException
      */
     public function getReference($id)
