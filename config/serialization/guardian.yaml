@@ -6,5 +6,7 @@ App\Entity\Guardian:
             groups: ["guardian-full"]
         id:
             groups: ["guardian-id", "guardian-common", "guardian-full"]
+        name:
+            groups: ["guardian-common", "guardian-full"]
         surname:
-            groups: ["kid-common", "kid-full"]
+            groups: ["guardian-common", "guardian-full"]

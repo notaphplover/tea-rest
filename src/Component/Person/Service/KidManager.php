@@ -35,6 +35,15 @@ class KidManager extends BaseManager
     }
 
     /**
+     * @param int $guardianId
+     * @return Kid[]
+     */
+    public function getByGuardian(int $guardianId): array
+    {
+        return $this->getEntityRepository()->getByGuardian($guardianId);
+    }
+
+    /**
      * @param string $nick
      * @return Kid|null
      */

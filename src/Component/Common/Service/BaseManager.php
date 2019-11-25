@@ -21,6 +21,15 @@ abstract class BaseManager
     }
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function getByIds(array $ids): array
+    {
+        return $this->getEntityRepository()->getByIds($ids);
+    }
+
+    /**
      * @return BaseRepository
      */
     public function getEntityRepository()

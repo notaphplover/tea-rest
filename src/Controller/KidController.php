@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
 use App\Component\Person\Handler\CreateKidHandler;
+use App\Component\Person\Handler\GetPendingAssociationsHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Serialization\Service\SerializationProvider;
-use App\Entity\Guardian;
 use App\Entity\GuardianKidPendingRelation;
 use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -98,6 +98,42 @@ class KidController extends AbstractFOSRestController
                 $kid,
                 'json',
                 ['groups' => ['kid-common']]
+            )
+        );
+    }
+
+    /**
+     * @SWG\Get(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets the list of kid association requests. Only kids managed by the user are retrieved.",
+     *     @SWG\Response(
+     *          response="200",
+     *          description="The kid was created successfully.",
+     *          @Model(type=Kid::class, groups={"kid-common"})
+     *     )
+     *  )
+     *
+     * @Rest\Get("/association/pending")
+     *
+     * @param GetPendingAssociationsHandler $getPendingAssociationsHandler
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     */
+    public function getKidPendingAssociationsAction(
+        GetPendingAssociationsHandler $getPendingAssociationsHandler,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $relations = $getPendingAssociationsHandler->handle($user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relations,
+                'json',
+                ['groups' => ['guardian-common', 'kid-id', 'pending-relation-full']]
             )
         );
     }
