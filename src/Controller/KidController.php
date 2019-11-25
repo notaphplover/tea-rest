@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
 use App\Component\Person\Handler\CreateKidHandler;
+use App\Component\Person\Handler\GetKidsOfGuardianHandler;
 use App\Component\Person\Handler\GetPendingAssociationsHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -134,6 +135,30 @@ class KidController extends AbstractFOSRestController
                 $relations,
                 'json',
                 ['groups' => ['guardian-common', 'kid-id', 'pending-relation-full']]
+            )
+        );
+    }
+
+    /**
+     * @Rest\Get("")
+     *
+     * @param GetKidsOfGuardianHandler $getKidsOfGuardianHandler
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     */
+    public function getKidsAction(
+        GetKidsOfGuardianHandler $getKidsOfGuardianHandler,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $kids = $getKidsOfGuardianHandler->handle($user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $kids,
+                'json',
+                ['groups' => ['kid-full', 'guardian-id']]
             )
         );
     }
