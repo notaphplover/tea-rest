@@ -8,9 +8,10 @@ use App\Repository\GuardianKidRelationRepository;
 /**
  * Class GuardianKidRelationManager
  *
+ * @method GuardianKidRelation[] getByKids()
  * @method GuardianKidRelationRepository getEntityRepository()
  * @method GuardianKidRelation getReference($id)
- * @method update(GuardianKidRelation $guardianKidRelation, bool $commit = true) : void
+ * @method void update(GuardianKidRelation $guardianKidRelation, bool $commit = true)
  */
 class GuardianKidRelationManager extends GuardianKidRelationBaseManager
 {
