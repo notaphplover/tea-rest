@@ -23,4 +23,13 @@ class KidRepository extends BaseRepository
     {
         parent::__construct($registry, Kid::class);
     }
+
+    /**
+     * @param int $guardianId
+     * @return Kid[]
+     */
+    public function getByGuardian(int $guardianId): array
+    {
+        return $this->findBy(['guardian_id' => $guardianId]);
+    }
 }
