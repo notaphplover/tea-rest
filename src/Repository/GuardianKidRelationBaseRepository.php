@@ -12,6 +12,17 @@ use App\Entity\GuardianKidRelationBase;
 abstract class GuardianKidRelationBaseRepository extends BaseRepository
 {
     /**
+     * @param int $guardianId
+     * @return GuardianKidRelationBase[]
+     */
+    public function getByGuardian(int $guardianId): array
+    {
+        return $this->findBy([
+            'guardian' => $guardianId,
+        ]);
+    }
+
+    /**
      * @param int[] $kidIds
      * @return GuardianKidRelationBase[]
      */
