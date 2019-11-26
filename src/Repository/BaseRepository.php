@@ -38,6 +38,15 @@ abstract class BaseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $id
+     * @return object|null
+     */
+    public function getById($id)
+    {
+        return $this->findOneBy([$this->idField => $id]);
+    }
+
+    /**
      * @param array $ids
      * @return array
      */
@@ -72,6 +81,20 @@ abstract class BaseRepository extends ServiceEntityRepository
     public function update($entity, bool $commit = true): void
     {
         $this->_em->persist($entity);
+        if ($commit) {
+            $this->_em->flush();
+        }
+    }
+
+    /**
+     * @param $entity
+     * @param bool $commit
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove($entity, bool $commit = true): void
+    {
+        $this->_em->remove($entity);
         if ($commit) {
             $this->_em->flush();
         }
