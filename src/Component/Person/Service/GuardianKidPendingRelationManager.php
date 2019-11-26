@@ -46,41 +46,32 @@ class GuardianKidPendingRelationManager extends GuardianKidRelationBaseManager
     }
 
     /**
-     * @param int $id
+     * @param GuardianKidPendingRelation $relation
+     * @return GuardianKidRelation
      * @throws KidAssociationAlreadyExists
-     * @throws ResourceNotFoundException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function accept(int $id): void
+    public function accept(GuardianKidPendingRelation $relation): GuardianKidRelation
     {
-        $relation = $this->getEntityRepository()->getById($id);
-        if (null === $relation) {
-            throw new ResourceNotFoundException();
-        }
         $newRelation = (new GuardianKidRelation())
             ->setGuardian($relation->getGuardian())
             ->setKid($relation->getKid());
-
         try {
             $this->guardianKidRelationRepository->update($newRelation);
         } catch (UniqueConstraintViolationException $exception) {
             throw new KidAssociationAlreadyExists($newRelation->getGuardian(), $newRelation->getKid(), $exception);
         }
+        return $newRelation;
     }
 
     /**
-     * @param int $id
-     * @throws ResourceNotFoundException
+     * @param GuardianKidPendingRelation $relation
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function reject(int $id): void
+    public function reject(GuardianKidPendingRelation $relation): void
     {
-        $relation = $this->getEntityRepository()->getById($id);
-        if (null === $relation) {
-            throw new ResourceNotFoundException();
-        }
         $this->getEntityRepository()->remove($relation, true);
     }
 }
