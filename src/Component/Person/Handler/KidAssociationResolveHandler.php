@@ -8,7 +8,9 @@ use App\Component\Common\Exception\UnexpectedStateException;
 use App\Component\Person\Service\GuardianKidPendingRelationManager;
 use App\Component\Person\Validation\KidAssociationResolveValidation;
 use App\Component\Validation\Exception\InvalidInputException;
+use App\Entity\GuardianKidPendingRelation;
 use App\Entity\GuardianKidRelation;
+use App\Entity\GuardianKidRelationBase;
 
 class KidAssociationResolveHandler
 {
@@ -33,7 +35,7 @@ class KidAssociationResolveHandler
     /**
      * @param array $data
      * @param int $guardianId
-     * @return GuardianKidRelation|null
+     * @return GuardianKidRelation|GuardianKidPendingRelation
      * @throws InvalidInputException
      * @throws ResourceNotFoundException
      * @throws UnexpectedStateException
@@ -42,18 +44,19 @@ class KidAssociationResolveHandler
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws AccessDeniedException
      */
-    public function handle(array $data, int $guardianId): ?GuardianKidRelation
+    public function handle(array $data, int $guardianId): GuardianKidRelationBase
     {
         $validation = $this->kidAssociationResolveValidation->validate($data);
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
         }
         $pendingRelationId = $data[KidAssociationResolveValidation::FIELD_ID];
+
         $pendingRelation = $this->guardianKidPendingRelationManager->getById($pendingRelationId);
+
         if (null === $pendingRelation) {
             throw new ResourceNotFoundException();
         }
-
         if ($pendingRelation->getKid()->getGuardian()->getId() !== $guardianId) {
             throw new AccessDeniedException();
         }
@@ -63,10 +66,9 @@ class KidAssociationResolveHandler
         if (KidAssociationResolveValidation::FIELD_RESOLUTION_ACCEPT === $resolution) {
             return $this->guardianKidPendingRelationManager->accept($pendingRelation);
         }
-
         if (KidAssociationResolveValidation::FIELD_RESOLUTION_REJECT === $resolution) {
             $this->guardianKidPendingRelationManager->reject($pendingRelation);
-            return null;
+            return $pendingRelation;
         }
 
         // This flow should be unreachable
