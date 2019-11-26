@@ -48,7 +48,7 @@ class Guardian extends Person implements UserInterface
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
