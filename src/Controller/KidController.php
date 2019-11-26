@@ -6,6 +6,7 @@ use App\Component\Auth\Entity\TokenUser;
 use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\GetKidsOfGuardianHandler;
 use App\Component\Person\Handler\GetPendingAssociationsHandler;
+use App\Component\Person\Handler\GetRequestedAssociationsHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
 use App\Component\Person\Handler\KidAssociationResolveHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -176,6 +177,30 @@ class KidController extends AbstractFOSRestController
                 $kids,
                 'json',
                 ['groups' => ['kid-full', 'guardian-id']]
+            )
+        );
+    }
+
+    /**
+     * @Rest\Get("/association")
+     *
+     * @param GetRequestedAssociationsHandler $getRequestedAssociationsHandler
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     */
+    public function getRequestedPendingAssociationsAction(
+        GetRequestedAssociationsHandler $getRequestedAssociationsHandler,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $relations = $getRequestedAssociationsHandler->handle($user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relations,
+                'json',
+                ['groups' => ['pending-relation-full', 'guardian-id', 'kid-id']]
             )
         );
     }
