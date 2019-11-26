@@ -14,9 +14,12 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 /**
  * Class GuardianKidPendingRelationManager
  *
+ * @method GuardianKidPendingRelation getById(int $id)
+ * @method GuardianKidPendingRelation[] getByIds(int $id)
  * @method GuardianKidPendingRelation[] getByKids(int[] $kidIds, bool $warmUpGuardians)
  * @method GuardianKidPendingRelationRepository getEntityRepository()
  * @method GuardianKidPendingRelation getReference($id)
+ * @method void remove(GuardianKidPendingRelation $entity, bool $commit = true)
  * @method void update(GuardianKidPendingRelation $guardianKidRelation, bool $commit = true)
  */
 class GuardianKidPendingRelationManager extends GuardianKidRelationBaseManager
