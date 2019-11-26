@@ -114,8 +114,11 @@ class KidController extends AbstractFOSRestController
      *     description="It gets the list of kid association requests. Only kids managed by the user are retrieved.",
      *     @SWG\Response(
      *          response="200",
-     *          description="The kid was created successfully.",
-     *          @Model(type=Kid::class, groups={"kid-common"})
+     *          description="List of kid association requests.",
+     *          @Model(
+     *              type=GuardianKidPendingRelation::class,
+     *              groups={"guardian-common", "kid-id", "pending-relation-full"}
+     *          )
      *     )
      *  )
      *
@@ -182,6 +185,24 @@ class KidController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets the list of pending requested associations to kids.",
+     *     @SWG\Response(
+     *          response="200",
+     *          description="List of pending requested associations to kids.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(
+     *                  type=GuardianKidPendingRelation::class,
+     *                  groups={"pending-relation-full", "guardian-id", "kid-id"}
+     *              )
+     *         )
+     *     )
+     *  )
+     *
      * @Rest\Get("/association")
      *
      * @param GetRequestedAssociationsHandler $getRequestedAssociationsHandler
