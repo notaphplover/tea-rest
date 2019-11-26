@@ -22,11 +22,11 @@ abstract class BaseManager
 
     /**
      * @param $id
-     * @return mixed
+     * @return object|null
      */
     public function getById($id)
     {
-        return $this->getById($id);
+        return $this->getEntityRepository()->getById($id);
     }
 
     /**
@@ -59,9 +59,11 @@ abstract class BaseManager
     /**
      * @param $entity
      * @param bool $commit
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove($entity, bool $commit = true): void
     {
-        $this->remove($entity, $commit);
+        $this->getEntityRepository()->remove($entity, $commit);
     }
 }
