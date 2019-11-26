@@ -1,0 +1,8 @@
+App\Entity\GuardianKidRelation:
+    attributes:
+        id:
+            groups: ["relation-id", "relation-full"]
+        guardian:
+            groups: ["relation-full"]
+        kid:
+            groups: ["relation-full"]

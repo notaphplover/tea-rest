@@ -10,8 +10,11 @@ use App\Repository\GuardianRepository;
 /**
  * Class GuardianKidRelationBaseManager
  *
+ * @method GuardianKidRelationBaseRepository getById(int $id)
+ * @method GuardianKidRelationBaseRepository[] getByIds(int $id)
  * @method GuardianKidRelationBaseRepository getEntityRepository()
  * @method GuardianKidRelationBase getReference($id)
+ * @method void remove(GuardianKidRelationBase $entity, bool $commit = true)
  */
 abstract class GuardianKidRelationBaseManager extends BaseManager
 {

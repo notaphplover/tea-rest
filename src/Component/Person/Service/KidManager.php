@@ -11,8 +11,11 @@ use App\Repository\KidRepository;
 /**
  * Class KidManager
  *
+ * @method Kid getById(int $id)
+ * @method Kid[] getByIds(int $id)
  * @method KidRepository getEntityRepository()
  * @method Kid getReference($id)
+ * @method void remove(Kid $entity, bool $commit = true)
  */
 class KidManager extends BaseManager
 {

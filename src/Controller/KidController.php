@@ -7,8 +7,10 @@ use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\GetKidsOfGuardianHandler;
 use App\Component\Person\Handler\GetPendingAssociationsHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
+use App\Component\Person\Handler\KidAssociationResolveHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\GuardianKidPendingRelation;
+use App\Entity\GuardianKidRelationBase;
 use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -223,6 +225,7 @@ class KidController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
      */
     public function requestKidAssociationAction(
         KidAssociationRequestHandler $kidAssociationRequestHandler,
@@ -239,6 +242,80 @@ class KidController extends AbstractFOSRestController
                 $relation,
                 'json',
                 ['groups' => ['pending-relation-full', 'guardian-id', 'kid-id']]
+            )
+        );
+    }
+
+    /**
+     * @SWG\Put(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It resolves an existing pending association between a kid and a user.",
+     *     @SWG\Parameter(
+     *          name="resolveKidAssociationData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"id", "resolution"},
+     *              @SWG\Property(
+     *                  property="id",
+     *                  type="int",
+     *                  example="1",
+     *                  description="Pending relation id"
+     *              ),
+     *              @SWG\Property(
+     *                  property="resolution",
+     *                  type="string",
+     *                  enum={"accept", "reject"},
+     *                  example="accept",
+     *                  description="Pending relation id"
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="The operation was performed successfully.",
+     *          @Model(
+     *              type=GuardianKidRelationBase::class,
+     *              groups={"pending-relation-full", "relation-full", "guardian-id", "kid-id"}
+     *          )
+     *     )
+     *  )
+     *
+     * @Rest\Put("/association/pending")
+     *
+     * @param KidAssociationResolveHandler $kidAssociationResolveHandler
+     * @param Request $request
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Common\Exception\UnexpectedStateException
+     * @throws \App\Component\Person\Exception\KidAssociationAlreadyExists
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function resolveKidAssociationAction(
+        KidAssociationResolveHandler $kidAssociationResolveHandler,
+        Request $request,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $relation = $kidAssociationResolveHandler->handle($content, $user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relation,
+                'json',
+                ['groups' => ['pending-relation-full', 'relation-full', 'guardian-id', 'kid-id']]
             )
         );
     }

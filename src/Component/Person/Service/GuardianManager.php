@@ -9,8 +9,11 @@ use App\Repository\GuardianRepository;
 /**
  * Class GuardianManager
  *
+ * @method Guardian getById(int $id)
+ * @method Guardian[] getByIds(int $id)
  * @method GuardianRepository getEntityRepository()
  * @method Guardian getReference($id)
+ * @method void remove(Guardian $entity, bool $commit = true)
  */
 class GuardianManager extends BaseManager
 {

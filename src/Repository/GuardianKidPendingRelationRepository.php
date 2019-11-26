@@ -9,16 +9,19 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * Class GuardianKidRelationRepository
  * @package App\Repository
  *
- * @method findOneBy(array $criteria, array $orderBy = null): ?GuardianKidPendingRelation
- * @method getOneByGuardianAndKid(int $guardianId, int $kidId) : ?GuardianKidPendingRelation
- * @method isManaged(GuardianKidPendingRelation $entity) : bool
- * @method update(GuardianKidPendingRelation $entity, bool $commit = true) : void
+ * @method null|GuardianKidPendingRelation findOneBy(array $criteria, array $orderBy = null)
+ * @method null|GuardianKidPendingRelation getById(int $id)
+ * @method GuardianKidPendingRelation[] getByIds(int[] $ids)
+ * @method null|GuardianKidPendingRelation getOneByGuardianAndKid(int $guardianId, int $kidId)
+ * @method bool isManaged(GuardianKidPendingRelation $entity)
+ * @method void update(GuardianKidPendingRelation $entity, bool $commit = true)
  */
 class GuardianKidPendingRelationRepository extends GuardianKidRelationBaseRepository
 {
     /**
      * GuardianKidPendingRelationRepository constructor.
      * @param ManagerRegistry $registry
+     * @throws \Doctrine\ORM\Mapping\MappingException
      */
     public function __construct(ManagerRegistry $registry)
     {
