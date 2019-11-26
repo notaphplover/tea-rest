@@ -58,7 +58,8 @@ class GuardianKidPendingRelationManager extends GuardianKidRelationBaseManager
             ->setGuardian($relation->getGuardian())
             ->setKid($relation->getKid());
         try {
-            $this->guardianKidRelationRepository->update($newRelation);
+            $this->guardianKidRelationRepository->update($newRelation, false);
+            $this->getEntityRepository()->remove($relation, true);
         } catch (UniqueConstraintViolationException $exception) {
             throw new KidAssociationAlreadyExists($newRelation->getGuardian(), $newRelation->getKid(), $exception);
         }
