@@ -31,16 +31,16 @@ class GuardianKidPendingRelationManager extends GuardianKidRelationBaseManager
 
     /**
      * GuardianKidPendingRelationManager constructor.
-     * @param GuardianKidPendingRelationRepository $guardianKidRelationBaseRepository
+     * @param GuardianKidPendingRelationRepository $guardianKidPendingRelationRepository
      * @param GuardianKidRelationRepository $guardianKidRelationRepository
      * @param GuardianRepository $guardianRepository
      */
     public function __construct(
-        GuardianKidPendingRelationRepository $guardianKidRelationBaseRepository,
+        GuardianKidPendingRelationRepository $guardianKidPendingRelationRepository,
         GuardianKidRelationRepository $guardianKidRelationRepository,
         GuardianRepository $guardianRepository
     ) {
-        parent::__construct($guardianKidRelationBaseRepository, $guardianRepository);
+        parent::__construct($guardianKidPendingRelationRepository, $guardianRepository);
 
         $this->guardianKidRelationRepository = $guardianKidRelationRepository;
     }
