@@ -23,8 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/api/kid", name="api_kid")
- * Class KidController
- * @package App\Controller
  */
 class KidController extends AbstractFOSRestController
 {
