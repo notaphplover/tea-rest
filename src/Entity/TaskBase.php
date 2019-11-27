@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass()
  */
-class TaskBase extends TaskFragmentBase
+abstract class TaskBase extends TaskFragmentBase
 {
     /**
      * @ORM\Column(type="date")

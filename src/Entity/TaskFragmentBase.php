@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass()
  */
-class TaskFragmentBase
+abstract class TaskFragmentBase
 {
     /**
      * @ORM\Column(type="text")

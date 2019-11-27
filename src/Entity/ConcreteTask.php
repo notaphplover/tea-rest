@@ -19,11 +19,27 @@ class ConcreteTask extends TaskBase
     protected $createdAt;
 
     /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var null|int
+     */
+    protected $id;
+
+    /**
      * @return DateTime
      */
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return null|int
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     /**

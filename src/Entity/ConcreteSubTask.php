@@ -12,11 +12,27 @@ use Doctrine\ORM\Mapping as ORM;
 class ConcreteSubTask extends TaskFragmentBase
 {
     /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var null|int
+     */
+    protected $id;
+
+    /**
      * @ORM\ManyToOne(targetEntity=ConcreteTask::class)
      * @ORM\JoinColumn(nullable=false)
      * @var ConcreteTask
      */
     protected $task;
+
+    /**
+     * @return null|int
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     /**
      * @return ConcreteTask
