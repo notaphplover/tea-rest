@@ -61,7 +61,7 @@ class KidManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(Kid $entity, bool $commit = true): void
+    public function update($entity, bool $commit = true): void
     {
         if (!$this->getEntityRepository()->isManaged($entity)) {
             $guardianKidRelation = (new GuardianKidRelation())

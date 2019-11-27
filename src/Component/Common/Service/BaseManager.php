@@ -21,6 +21,15 @@ abstract class BaseManager
     }
 
     /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function flush(): void
+    {
+        $this->getEntityRepository()->flush();
+    }
+
+    /**
      * @param $id
      * @return object|null
      */

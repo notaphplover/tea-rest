@@ -41,7 +41,7 @@ class GuardianManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(Guardian $guardian, bool $commit = true): void
+    public function update($guardian, bool $commit = true): void
     {
         $this->getEntityRepository()->update($guardian, $commit);
     }
