@@ -8,7 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ConcreteTaskRepository::class)
- * @ORM\Table(name="concrete_task")
+ * @ORM\Table(
+ *      name="concrete_task",
+ *      indexes={
+ *          @ORM\Index(name="concrete_task_day_kid", columns={"day", "kid_id"})
+ *      }
+ * )
  */
 class ConcreteTask extends TaskBase
 {
