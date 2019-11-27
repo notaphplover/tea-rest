@@ -11,4 +11,28 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ConcreteSubTask extends TaskFragmentBase
 {
+    /**
+     * @ORM\ManyToOne(targetEntity=ConcreteTask::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @var ConcreteTask
+     */
+    protected $task;
+
+    /**
+     * @return ConcreteTask
+     */
+    public function getTask(): ConcreteTask
+    {
+        return $this->task;
+    }
+
+    /**
+     * @param ConcreteTask $task
+     * @return ConcreteSubTask
+     */
+    public function setTask(ConcreteTask $task): ConcreteSubTask
+    {
+        $this->task = $task;
+        return $this;
+    }
 }
