@@ -66,4 +66,15 @@ abstract class BaseManager
     {
         $this->getEntityRepository()->remove($entity, $commit);
     }
+
+    /**
+     * @param $entity
+     * @param bool $commit
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function update($entity, bool $commit = true): void
+    {
+        $this->getEntityRepository()->update($entity, $commit);
+    }
 }
