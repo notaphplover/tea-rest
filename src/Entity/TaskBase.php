@@ -22,6 +22,12 @@ abstract class TaskBase extends TaskFragmentBase
      */
     protected $guardian;
     /**
+     * @ORM\ManyToOne(targetEntity=Kid::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @var Kid
+     */
+    protected $kid;
+    /**
      * @ORM\Column(type="time")
      * @var DateTime
      */
@@ -46,6 +52,14 @@ abstract class TaskBase extends TaskFragmentBase
     public function getGuardian(): Guardian
     {
         return $this->guardian;
+    }
+
+    /**
+     * @return Kid
+     */
+    public function getKid(): Kid
+    {
+        return $this->kid;
     }
 
     /**
@@ -81,6 +95,16 @@ abstract class TaskBase extends TaskFragmentBase
     public function setGuardian(Guardian $guardian): TaskBase
     {
         $this->guardian = $guardian;
+        return $this;
+    }
+
+    /**
+     * @param Kid $kid
+     * @return $this
+     */
+    public function setKid(Kid $kid): TaskBase
+    {
+        $this->kid = $kid;
         return $this;
     }
 
