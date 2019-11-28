@@ -20,7 +20,7 @@ class ConcreteSubTask extends TaskFragmentBase
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ConcreteTask::class)
+     * @ORM\ManyToOne(targetEntity=ConcreteTask::class, inversedBy="subTasks")
      * @ORM\JoinColumn(nullable=false)
      * @var ConcreteTask
      */
