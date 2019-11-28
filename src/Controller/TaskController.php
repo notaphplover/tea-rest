@@ -27,7 +27,7 @@ class TaskController extends AbstractFOSRestController
      *     tags={"calendar"},
      *     security={{"ApiToken": {}}},
      *     consumes={"application/json"},
-     *     description="It creates new task for a kid at a certain day.",
+     *     description="It creates new tasks for a kid at a certain day.",
      *     @SWG\Parameter(
      *          name="kid",
      *          in="path",
@@ -35,7 +35,7 @@ class TaskController extends AbstractFOSRestController
      *          description="Kid's id"
      *     ),
      *     @SWG\Parameter(
-     *          name="createTasjsData",
+     *          name="createTasksData",
      *          in="body",
      *          required=true,
      *          description="JSON object",
@@ -135,6 +135,43 @@ class TaskController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"calendar"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets tasks for a kid at a certain day.",
+     *     @SWG\Parameter(
+     *          name="kid",
+     *          in="path",
+     *          type="integer",
+     *          description="Kid's id"
+     *     ),
+     *      @SWG\Parameter(
+     *          name="getTasksData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"day"},
+     *              @SWG\Property(
+     *                  property="day",
+     *                  type="string",
+     *                  example="2010-11-22",
+     *                  description="Taks date"
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Tasks found.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(type=ConcreteTask::class, groups={"concrete-subtask-common", "concrete-task-common"})
+     *         )
+     *     )
+     * )
+     *
      * @Rest\Get("/{kid}/tasks", requirements={"kid"="\d+"})
      *
      * @param int $kid
