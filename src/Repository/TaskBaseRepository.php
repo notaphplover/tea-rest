@@ -27,7 +27,6 @@ abstract class TaskBaseRepository extends TaskFragmentBaseRepository
                 'timeStart' => $task->getTimeStart(),
                 'timeEnd' => $task->getTimeEnd()
             ])->getQuery();
-
         return $query->getSingleScalarResult() > 0;
     }
 }
