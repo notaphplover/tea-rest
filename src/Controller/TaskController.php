@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
 use App\Component\Calendar\Handler\CreateTasksHandler;
+use App\Component\Calendar\Handler\GetTasksHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\ConcreteTask;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -96,7 +97,7 @@ class TaskController extends AbstractFOSRestController
      *          description="The tasks were created successfully.",
      *          @SWG\Schema(
      *              type="array",
-     *              @Model(type=ConcreteTask::class, groups={"concrete-task-common"})
+     *              @Model(type=ConcreteTask::class, groups={"concrete-subtask-common", "concrete-task-common"})
      *         )
      *     )
      * )
@@ -123,12 +124,46 @@ class TaskController extends AbstractFOSRestController
         $content = $this->parseJsonFromRequest($request);
         /** @var $user TokenUser */
         $user = $this->getUser();
-        $relations = $createTasksHandler->handle($content, $user->getId(), $kid);
+        $tasks = $createTasksHandler->handle($content, $user->getId(), $kid);
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $relations,
+                $tasks,
                 'json',
-                ['groups' => ['concrete-task-common']]
+                ['groups' => ['concrete-subtask-common', 'concrete-task-common']]
+            )
+        );
+    }
+
+    /**
+     * @Rest\Get("/{kid}/tasks", requirements={"kid"="\d+"})
+     *
+     * @param int $kid
+     * @param GetTasksHandler $getTasksHandler
+     * @param Request $request
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
+    public function getTasksAction(
+        int $kid,
+        GetTasksHandler $getTasksHandler,
+        Request $request,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $tasks = $getTasksHandler->handle($content, $user->getId(), $kid);
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $tasks,
+                'json',
+                ['groups' => ['concrete-subtask-common', 'concrete-task-common']]
             )
         );
     }
