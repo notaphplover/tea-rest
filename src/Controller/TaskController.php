@@ -6,7 +6,6 @@ use App\Component\Auth\Entity\TokenUser;
 use App\Component\Calendar\Handler\CreateTasksHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\ConcreteTask;
-use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/kid", name="api_task")
+ * @Route("/api/kids", name="api_task")
  */
 class TaskController extends AbstractFOSRestController
 {
@@ -102,7 +101,7 @@ class TaskController extends AbstractFOSRestController
      *     )
      * )
      *
-     * @Rest\Post("/{kid}/task", requirements={"kid"="\d+"})
+     * @Rest\Post("/{kid}/tasks", requirements={"kid"="\d+"})
      *
      * @param int $kid
      * @param CreateTasksHandler $createTasksHandler

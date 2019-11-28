@@ -35,6 +35,7 @@ class KidAssociationResolveHandler
     /**
      * @param array $data
      * @param int $guardianId
+     * @param int $pendingRelationId
      * @return GuardianKidRelation|GuardianKidPendingRelation
      * @throws InvalidInputException
      * @throws ResourceNotFoundException
@@ -44,13 +45,12 @@ class KidAssociationResolveHandler
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws AccessDeniedException
      */
-    public function handle(array $data, int $guardianId): GuardianKidRelationBase
+    public function handle(array $data, int $guardianId, int $pendingRelationId): GuardianKidRelationBase
     {
         $validation = $this->kidAssociationResolveValidation->validate($data);
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
         }
-        $pendingRelationId = $data[KidAssociationResolveValidation::FIELD_ID];
 
         $pendingRelation = $this->guardianKidPendingRelationManager->getById($pendingRelationId);
 

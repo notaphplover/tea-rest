@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/kid", name="api_kid")
+ * @Route("/api/kids", name="api_kid")
  */
 class KidController extends AbstractFOSRestController
 {
@@ -120,7 +120,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Get("/association/pending")
+     * @Rest\Get("/associations/pending")
      *
      * @param GetPendingAssociationsHandler $getPendingAssociationsHandler
      * @param SerializationProvider $serializationProvider
@@ -201,7 +201,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Get("/association")
+     * @Rest\Get("/associations")
      *
      * @param GetRequestedAssociationsHandler $getRequestedAssociationsHandler
      * @param SerializationProvider $serializationProvider
@@ -256,7 +256,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Post("/association")
+     * @Rest\Post("/associations")
      *
      * @param KidAssociationRequestHandler $kidAssociationRequestHandler
      * @param Request $request
@@ -297,6 +297,12 @@ class KidController extends AbstractFOSRestController
      *     consumes={"application/json"},
      *     description="It resolves an existing pending association between a kid and a user.",
      *     @SWG\Parameter(
+     *          name="association",
+     *          in="path",
+     *          type="integer",
+     *          description="Kid's id"
+     *     ),
+     *     @SWG\Parameter(
      *          name="resolveKidAssociationData",
      *          in="body",
      *          required=true,
@@ -304,12 +310,6 @@ class KidController extends AbstractFOSRestController
      *          @SWG\Schema(
      *              type="object",
      *              required={"id", "resolution"},
-     *              @SWG\Property(
-     *                  property="id",
-     *                  type="int",
-     *                  example="1",
-     *                  description="Pending relation id"
-     *              ),
      *              @SWG\Property(
      *                  property="resolution",
      *                  type="string",
@@ -329,8 +329,9 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Put("/association/pending")
+     * @Rest\Put("/associations/{association}", requirements={"association"="\d+"})
      *
+     * @param int $association
      * @param KidAssociationResolveHandler $kidAssociationResolveHandler
      * @param Request $request
      * @param SerializationProvider $serializationProvider
@@ -346,6 +347,7 @@ class KidController extends AbstractFOSRestController
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function resolveKidAssociationAction(
+        int $association,
         KidAssociationResolveHandler $kidAssociationResolveHandler,
         Request $request,
         SerializationProvider $serializationProvider
@@ -354,7 +356,7 @@ class KidController extends AbstractFOSRestController
         $content = $this->parseJsonFromRequest($request);
         /** @var $user TokenUser */
         $user = $this->getUser();
-        $relation = $kidAssociationResolveHandler->handle($content, $user->getId());
+        $relation = $kidAssociationResolveHandler->handle($content, $user->getId(), $association);
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
                 $relation,
