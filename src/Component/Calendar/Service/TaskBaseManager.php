@@ -4,6 +4,7 @@ namespace App\Component\Calendar\Service;
 
 use App\Entity\TaskBase;
 use App\Repository\TaskBaseRepository;
+use DateTime;
 
 /**
  * @method TaskBaseRepository getEntityRepository()
@@ -19,5 +20,15 @@ abstract class TaskBaseManager extends TaskFragmentBaseManager
     public function areCollisions(TaskBase $task): bool
     {
         return $this->getEntityRepository()->areCollisions($task);
+    }
+
+    /**
+     * @param DateTime $day
+     * @param int $kidId
+     * @return TaskBase[]
+     */
+    public function getTasks(DateTime $day, int $kidId): array
+    {
+        return $this->getEntityRepository()->getTasks($day, $kidId);
     }
 }
