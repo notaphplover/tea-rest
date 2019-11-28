@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/kid", name="api_kid")
+ * @Route("/api/kids", name="api_kid")
  */
 class KidController extends AbstractFOSRestController
 {
@@ -120,7 +120,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Get("/association/pending")
+     * @Rest\Get("/associations/pending")
      *
      * @param GetPendingAssociationsHandler $getPendingAssociationsHandler
      * @param SerializationProvider $serializationProvider
@@ -201,7 +201,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Get("/association")
+     * @Rest\Get("/associations")
      *
      * @param GetRequestedAssociationsHandler $getRequestedAssociationsHandler
      * @param SerializationProvider $serializationProvider
@@ -256,7 +256,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Post("/association")
+     * @Rest\Post("/associations")
      *
      * @param KidAssociationRequestHandler $kidAssociationRequestHandler
      * @param Request $request
@@ -329,7 +329,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Put("/association/pending")
+     * @Rest\Put("/associations/pending")
      *
      * @param KidAssociationResolveHandler $kidAssociationResolveHandler
      * @param Request $request
