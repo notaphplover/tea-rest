@@ -60,8 +60,13 @@ class CreateKidHandler
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
         }
+
         $kid = (new Kid())
-            ->setBirthDate(new DateTime($data[CreateKidValidation::FIELD_BIRTHDATE]))
+            ->setBirthDate(
+                array_key_exists(CreateKidValidation::FIELD_BIRTHDATE, $data) ?
+                    new \DateTime($data[CreateKidValidation::FIELD_BIRTHDATE]):
+                    null
+            )
             ->setName($data[CreateKidValidation::FIELD_NAME])
             ->setNick($data[CreateKidValidation::FIELD_NICK])
             ->setSurname($data[CreateKidValidation::FIELD_SURNAME])
