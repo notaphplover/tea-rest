@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class KidAssociationResolveValidation extends BaseValidation
 {
-    public const FIELD_ID = 'id';
     public const FIELD_RESOLUTION = 'resolution';
     public const FIELD_RESOLUTION_ACCEPT = 'accept';
     public const FIELD_RESOLUTION_REJECT = 'reject';
@@ -19,10 +18,6 @@ class KidAssociationResolveValidation extends BaseValidation
     {
         parent::__construct(
             new Assert\Collection([
-                self::FIELD_ID => [
-                    new Assert\Type(['type' => ['int']]),
-                    new Assert\GreaterThanOrEqual(['value' => 0]),
-                ],
                 self::FIELD_RESOLUTION => [
                     new Assert\Type(['type' => ['string']]),
                     new Assert\Choice(['choices' => [
