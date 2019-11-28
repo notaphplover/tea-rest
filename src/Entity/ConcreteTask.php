@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ConcreteTaskRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +33,17 @@ class ConcreteTask extends TaskBase
     protected $id;
 
     /**
+     * @ORM\OneToMany(targetEntity=ConcreteSubTask::class, mappedBy="task")
+     * @var ArrayCollection|ConcreteSubTask[]
+     */
+    protected $subTasks;
+
+    public function __construct()
+    {
+        $this->subTasks = new ArrayCollection();
+    }
+
+    /**
      * @return DateTime
      */
     public function getCreatedAt(): DateTime
@@ -45,6 +57,14 @@ class ConcreteTask extends TaskBase
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return ArrayCollection|ConcreteSubTask[]
+     */
+    public function getSubTasks()
+    {
+        return $this->subTasks;
     }
 
     /**
