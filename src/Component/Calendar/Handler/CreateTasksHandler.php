@@ -7,7 +7,9 @@ use App\Component\Calendar\Exception\TaskInvalidIntervalException;
 use App\Component\Calendar\Service\ConcreteSubTaskManager;
 use App\Component\Calendar\Service\ConcreteTaskManager;
 use App\Component\Calendar\Validation\CreateTasksValidation;
+use App\Component\Common\Exception\AccessDeniedException;
 use App\Component\Common\Exception\ResourceNotFoundException;
+use App\Component\Person\Service\GuardianKidRelationManager;
 use App\Component\Person\Service\GuardianManager;
 use App\Component\Person\Service\KidManager;
 use App\Component\Validation\Exception\InvalidInputException;
@@ -33,6 +35,10 @@ class CreateTasksHandler
      */
     protected $createTaskValidation;
     /**
+     * @var GuardianKidRelationManager
+     */
+    protected $guardianKidRelationManager;
+    /**
      * @var GuardianManager
      */
     protected $guardianManager;
@@ -45,6 +51,7 @@ class CreateTasksHandler
         ConcreteSubTaskManager $concreteSubTaskManager,
         ConcreteTaskManager $concreteTaskManager,
         CreateTasksValidation $createTaskValidation,
+        GuardianKidRelationManager $guardianKidRelationManager,
         GuardianManager $guardianManager,
         KidManager $kidManager
     )
@@ -52,6 +59,7 @@ class CreateTasksHandler
         $this->concreteSubTaskManager = $concreteSubTaskManager;
         $this->concreteTaskManager = $concreteTaskManager;
         $this->createTaskValidation = $createTaskValidation;
+        $this->guardianKidRelationManager = $guardianKidRelationManager;
         $this->guardianManager = $guardianManager;
         $this->kidManager = $kidManager;
     }
@@ -73,13 +81,16 @@ class CreateTasksHandler
         $day = new DateTime($data[CreateTasksValidation::FIELD_DAY]);
         $kidId = $data[CreateTasksValidation::FIELD_KID];
         $kid = $this->kidManager->getById($kidId);
-
         if (null === $kid) {
             throw new ResourceNotFoundException();
         }
+        $guardian = $this->guardianManager->getReference($guardianId);
+
+        if (null === $this->guardianKidRelationManager->getOneByGuardianAndKid($guardian->getId(), $kid->getId())) {
+            throw new AccessDeniedException();
+        }
 
         $tasks = $data[CreateTasksValidation::FIELD_TASKS];
-        $guardian = $this->guardianManager->getReference($guardianId);
 
         $tasksArray = $this->createTasks($tasks, $day, $guardian, $kid);
 
