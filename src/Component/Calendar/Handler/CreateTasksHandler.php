@@ -67,19 +67,19 @@ class CreateTasksHandler
     /**
      * @param array $data
      * @param int $guardianId
+     * @param int $kidId
      * @return ConcreteTask[]
      * @throws InvalidInputException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Exception
      */
-    public function handle(array $data, int $guardianId): array
+    public function handle(array $data, int $guardianId, int $kidId): array
     {
         $validation = $this->createTaskValidation->validate($data);
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
         }
         $day = new DateTime($data[CreateTasksValidation::FIELD_DAY]);
-        $kidId = $data[CreateTasksValidation::FIELD_KID];
         $kid = $this->kidManager->getById($kidId);
         if (null === $kid) {
             throw new ResourceNotFoundException();

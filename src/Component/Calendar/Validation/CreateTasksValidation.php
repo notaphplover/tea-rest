@@ -12,7 +12,6 @@ class CreateTasksValidation extends BaseValidation
     public const FIELD_HH_SS_PATTERN_HOURS_GROUP = 1;
     public const FIELD_HH_SS_PATTERN_MINUTES_GROUP = 4;
     public const FIELD_DAY = 'day';
-    public const FIELD_KID = 'kid';
     public const FIELD_TASK_STEP_END = 'end';
     public const FIELD_TASK_STEP_START = 'start';
     public const FIELD_TASK_STEP_IMG = 'image';
@@ -29,10 +28,6 @@ class CreateTasksValidation extends BaseValidation
             self::FIELD_DAY => [
                 new DateStringConstraint(),
                 new Assert\Type(['type' => ['string']]),
-            ],
-            self::FIELD_KID => [
-                new Assert\GreaterThanOrEqual(['value' => 0]),
-                new Assert\Type(['type' => ['int']]),
             ],
             self::FIELD_TASKS => [
                 new Assert\Count(['min' => self::TASKS_MIN]),
