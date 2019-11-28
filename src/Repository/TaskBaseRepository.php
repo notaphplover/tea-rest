@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TaskBase;
+use function Doctrine\ORM\QueryBuilder;
 
 abstract class TaskBaseRepository extends TaskFragmentBaseRepository
 {
@@ -20,10 +21,12 @@ abstract class TaskBaseRepository extends TaskFragmentBaseRepository
             ->select('count(t)')
             ->where(
                 $qb->expr()->andX(
+                    $qb->expr()->eq('t.kid', ':kid'),
                     $qb->expr()->lt('t.timeStart', ':timeEnd'),
                     $qb->expr()->gt('t.timeEnd', ':timeStart')
                 )
             )->setParameters([
+                'kid' => $task->getKid()->getId(),
                 'timeStart' => $task->getTimeStart(),
                 'timeEnd' => $task->getTimeEnd()
             ])->getQuery();
