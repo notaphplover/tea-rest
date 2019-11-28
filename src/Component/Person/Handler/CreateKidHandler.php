@@ -9,6 +9,7 @@ use App\Component\Person\Validation\CreateKidValidation;
 use App\Component\Validation\Exception\InvalidInputException;
 use App\Entity\Guardian;
 use App\Entity\Kid;
+use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class CreateKidHandler
@@ -51,6 +52,7 @@ class CreateKidHandler
      * @throws KidAlreadyExistsException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function handle(array $data, int $guardianId): Kid
     {
@@ -59,7 +61,7 @@ class CreateKidHandler
             throw new InvalidInputException($validation);
         }
         $kid = (new Kid())
-            ->setBirthDate(new \DateTime($data[CreateKidValidation::FIELD_BIRTHDATE]))
+            ->setBirthDate(new DateTime($data[CreateKidValidation::FIELD_BIRTHDATE]))
             ->setName($data[CreateKidValidation::FIELD_NAME])
             ->setNick($data[CreateKidValidation::FIELD_NICK])
             ->setSurname($data[CreateKidValidation::FIELD_SURNAME])

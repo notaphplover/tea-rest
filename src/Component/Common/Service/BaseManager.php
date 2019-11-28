@@ -21,6 +21,15 @@ abstract class BaseManager
     }
 
     /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function flush(): void
+    {
+        $this->getEntityRepository()->flush();
+    }
+
+    /**
      * @param $id
      * @return object|null
      */
@@ -65,5 +74,16 @@ abstract class BaseManager
     public function remove($entity, bool $commit = true): void
     {
         $this->getEntityRepository()->remove($entity, $commit);
+    }
+
+    /**
+     * @param $entity
+     * @param bool $commit
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function update($entity, bool $commit = true): void
+    {
+        $this->getEntityRepository()->update($entity, $commit);
     }
 }

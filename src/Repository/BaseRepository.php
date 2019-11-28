@@ -63,6 +63,15 @@ abstract class BaseRepository extends ServiceEntityRepository
     }
 
     /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function flush(): void
+    {
+        $this->_em->flush();
+    }
+
+    /**
      * @param $id
      * @return bool|\Doctrine\Common\Proxy\Proxy|object|null
      * @throws \Doctrine\ORM\ORMException

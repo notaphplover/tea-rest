@@ -81,7 +81,7 @@ abstract class GuardianKidRelationBaseManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(GuardianKidRelationBase $guardianKidRelation, bool $commit = true): void
+    public function update($guardianKidRelation, bool $commit = true): void
     {
         $this->getEntityRepository()->update($guardianKidRelation, $commit);
     }
