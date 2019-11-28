@@ -116,6 +116,8 @@ class CreateTasksHandler
                 ->setText($iTaskStepText)
                 ->setTask($task);
 
+            $task->getSubTasks()->add($subTask);
+
             $this->concreteSubTaskManager->update($subTask, false);
         }
     }

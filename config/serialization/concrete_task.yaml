@@ -12,6 +12,8 @@ App\Entity\ConcreteTask:
             groups: ["concrete-task-common", "concrete-task-full"]
         kid:
             groups: ["concrete-task-full"]
+        subTasks:
+            groups: ["concrete-task-common", "concrete-task-full"]
         text:
             groups: ["concrete-task-common", "concrete-task-full"]
         timeEnd:

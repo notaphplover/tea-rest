@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\TaskBase;
+use DateTime;
 use function Doctrine\ORM\QueryBuilder;
 
 abstract class TaskBaseRepository extends TaskFragmentBaseRepository
@@ -31,5 +32,27 @@ abstract class TaskBaseRepository extends TaskFragmentBaseRepository
                 'timeEnd' => $task->getTimeEnd()
             ])->getQuery();
         return $query->getSingleScalarResult() > 0;
+    }
+
+    /**
+     * @param DateTime $day
+     * @param int $kidId
+     * @return TaskBase[]
+     */
+    public function getTasks(DateTime $day, int $kidId): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        $query = $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('t.day', ':day'),
+                $qb->expr()->eq('t.kid', ':kid')
+            )
+        )->setParameters([
+            'day' => $day,
+            'kid' => $kidId,
+        ])->getQuery();
+
+        return $query->getResult();
     }
 }
