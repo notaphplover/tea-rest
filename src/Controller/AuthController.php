@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
-use App\Component\Person\Command\LoginCommand;
-use App\Component\Person\Command\RegisterCommand;
+use App\Component\Auth\Service\LoginWithGoogleAndroid;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -23,6 +22,28 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthController extends AbstractFOSRestController
 {
     use ControllerHelper;
+
+    /**
+     * @Rest\Post("/login/google/android")
+     * @param Request $request
+     * @param LoginWithGoogleAndroid $loginWithGoogleHandler
+     * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\InvalidTokenException
+     * @throws \App\Component\Auth\Exception\MissingEmailClaimException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
+    public function googleAndroidLoginAction(
+        Request $request,
+        LoginWithGoogleAndroid $loginWithGoogleHandler
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        $token = $loginWithGoogleHandler->handle($content);
+        return $this->getTokenResponse((string)$token);
+    }
 
     /**
      * @SWG\Post(
