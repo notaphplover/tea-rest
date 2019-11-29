@@ -6,9 +6,12 @@ use App\Component\Auth\Entity\TokenUser;
 use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\GetKidsOfGuardianHandler;
 use App\Component\Person\Handler\GetPendingAssociationsHandler;
+use App\Component\Person\Handler\GetRequestedAssociationsHandler;
 use App\Component\Person\Handler\KidAssociationRequestHandler;
+use App\Component\Person\Handler\KidAssociationResolveHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\GuardianKidPendingRelation;
+use App\Entity\GuardianKidRelationBase;
 use App\Entity\Kid;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -19,9 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/api/kid", name="api_kid")
- * Class KidController
- * @package App\Controller
+ * @Route("/api/kids", name="api_kid")
  */
 class KidController extends AbstractFOSRestController
 {
@@ -111,12 +112,15 @@ class KidController extends AbstractFOSRestController
      *     description="It gets the list of kid association requests. Only kids managed by the user are retrieved.",
      *     @SWG\Response(
      *          response="200",
-     *          description="The kid was created successfully.",
-     *          @Model(type=Kid::class, groups={"kid-common"})
+     *          description="List of kid association requests.",
+     *          @Model(
+     *              type=GuardianKidPendingRelation::class,
+     *              groups={"guardian-common", "kid-id", "pending-relation-full"}
+     *          )
      *     )
      *  )
      *
-     * @Rest\Get("/association/pending")
+     * @Rest\Get("/associations/pending")
      *
      * @param GetPendingAssociationsHandler $getPendingAssociationsHandler
      * @param SerializationProvider $serializationProvider
@@ -179,6 +183,48 @@ class KidController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets the list of pending requested associations to kids.",
+     *     @SWG\Response(
+     *          response="200",
+     *          description="List of pending requested associations to kids.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(
+     *                  type=GuardianKidPendingRelation::class,
+     *                  groups={"pending-relation-full", "guardian-id", "kid-id"}
+     *              )
+     *         )
+     *     )
+     *  )
+     *
+     * @Rest\Get("/associations")
+     *
+     * @param GetRequestedAssociationsHandler $getRequestedAssociationsHandler
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     */
+    public function getRequestedPendingAssociationsAction(
+        GetRequestedAssociationsHandler $getRequestedAssociationsHandler,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $relations = $getRequestedAssociationsHandler->handle($user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relations,
+                'json',
+                ['groups' => ['pending-relation-full', 'guardian-id', 'kid-id']]
+            )
+        );
+    }
+
+    /**
      * @SWG\Post(
      *     tags={"kid"},
      *     security={{"ApiToken": {}}},
@@ -210,7 +256,7 @@ class KidController extends AbstractFOSRestController
      *     )
      *  )
      *
-     * @Rest\Post("/association")
+     * @Rest\Post("/associations")
      *
      * @param KidAssociationRequestHandler $kidAssociationRequestHandler
      * @param Request $request
@@ -223,6 +269,7 @@ class KidController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
      */
     public function requestKidAssociationAction(
         KidAssociationRequestHandler $kidAssociationRequestHandler,
@@ -239,6 +286,82 @@ class KidController extends AbstractFOSRestController
                 $relation,
                 'json',
                 ['groups' => ['pending-relation-full', 'guardian-id', 'kid-id']]
+            )
+        );
+    }
+
+    /**
+     * @SWG\Put(
+     *     tags={"kid"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It resolves an existing pending association between a kid and a user.",
+     *     @SWG\Parameter(
+     *          name="association",
+     *          in="path",
+     *          type="integer",
+     *          description="Kid's id"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="resolveKidAssociationData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"id", "resolution"},
+     *              @SWG\Property(
+     *                  property="resolution",
+     *                  type="string",
+     *                  enum={"accept", "reject"},
+     *                  example="accept",
+     *                  description="Pending relation id"
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="The operation was performed successfully.",
+     *          @Model(
+     *              type=GuardianKidRelationBase::class,
+     *              groups={"pending-relation-full", "relation-full", "guardian-id", "kid-id"}
+     *          )
+     *     )
+     *  )
+     *
+     * @Rest\Put("/associations/{association}", requirements={"association"="\d+"})
+     *
+     * @param int $association
+     * @param KidAssociationResolveHandler $kidAssociationResolveHandler
+     * @param Request $request
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Common\Exception\UnexpectedStateException
+     * @throws \App\Component\Person\Exception\KidAssociationAlreadyExists
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function resolveKidAssociationAction(
+        int $association,
+        KidAssociationResolveHandler $kidAssociationResolveHandler,
+        Request $request,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        /** @var $user TokenUser */
+        $user = $this->getUser();
+        $relation = $kidAssociationResolveHandler->handle($content, $user->getId(), $association);
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $relation,
+                'json',
+                ['groups' => ['pending-relation-full', 'relation-full', 'guardian-id', 'kid-id']]
             )
         );
     }

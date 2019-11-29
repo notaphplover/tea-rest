@@ -10,8 +10,11 @@ use App\Repository\GuardianRepository;
 /**
  * Class GuardianKidRelationBaseManager
  *
+ * @method GuardianKidRelationBaseRepository getById(int $id)
+ * @method GuardianKidRelationBaseRepository[] getByIds(int $id)
  * @method GuardianKidRelationBaseRepository getEntityRepository()
  * @method GuardianKidRelationBase getReference($id)
+ * @method void remove(GuardianKidRelationBase $entity, bool $commit = true)
  */
 abstract class GuardianKidRelationBaseManager extends BaseManager
 {
@@ -78,7 +81,7 @@ abstract class GuardianKidRelationBaseManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(GuardianKidRelationBase $guardianKidRelation, bool $commit = true): void
+    public function update($guardianKidRelation, bool $commit = true): void
     {
         $this->getEntityRepository()->update($guardianKidRelation, $commit);
     }

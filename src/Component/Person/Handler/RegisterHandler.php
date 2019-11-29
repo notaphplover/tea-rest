@@ -62,9 +62,9 @@ class RegisterHandler
         }
         $guardian = (new Guardian())
             ->setBirthDate(
-                null === $data[RegisterValidation::FIELD_BIRTHDATE] ?
-                    null :
-                    new \DateTime($data[RegisterValidation::FIELD_BIRTHDATE])
+                array_key_exists(RegisterValidation::FIELD_BIRTHDATE, $data) ?
+                    new \DateTime($data[RegisterValidation::FIELD_BIRTHDATE]):
+                    null
             )
             ->setEmail($data[RegisterValidation::FIELD_EMAIL])
             ->setName($data[RegisterValidation::FIELD_NAME])

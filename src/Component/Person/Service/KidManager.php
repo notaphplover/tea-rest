@@ -11,8 +11,11 @@ use App\Repository\KidRepository;
 /**
  * Class KidManager
  *
+ * @method Kid getById(int $id)
+ * @method Kid[] getByIds(int $id)
  * @method KidRepository getEntityRepository()
  * @method Kid getReference($id)
+ * @method void remove(Kid $entity, bool $commit = true)
  */
 class KidManager extends BaseManager
 {
@@ -58,7 +61,7 @@ class KidManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(Kid $entity, bool $commit = true): void
+    public function update($entity, bool $commit = true): void
     {
         if (!$this->getEntityRepository()->isManaged($entity)) {
             $guardianKidRelation = (new GuardianKidRelation())

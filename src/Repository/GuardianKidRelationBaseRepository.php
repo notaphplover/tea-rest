@@ -7,7 +7,9 @@ use App\Entity\GuardianKidRelationBase;
 /**
  * Class GuardianKidRelationBaseRepository
  *
- * @method findOneBy(array $criteria, array $orderBy = null): ?GuardianKidRelationBase
+ * @method null|GuardianKidRelationBase findOneBy(array $criteria, array $orderBy = null)
+ * @method null|GuardianKidRelationBase getById(int $id)
+ * @method GuardianKidRelationBase[] getByIds(int[] $ids)
  */
 abstract class GuardianKidRelationBaseRepository extends BaseRepository
 {

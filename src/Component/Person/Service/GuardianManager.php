@@ -9,8 +9,11 @@ use App\Repository\GuardianRepository;
 /**
  * Class GuardianManager
  *
+ * @method Guardian getById(int $id)
+ * @method Guardian[] getByIds(int $id)
  * @method GuardianRepository getEntityRepository()
  * @method Guardian getReference($id)
+ * @method void remove(Guardian $entity, bool $commit = true)
  */
 class GuardianManager extends BaseManager
 {
@@ -38,7 +41,7 @@ class GuardianManager extends BaseManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(Guardian $guardian, bool $commit = true): void
+    public function update($guardian, bool $commit = true): void
     {
         $this->getEntityRepository()->update($guardian, $commit);
     }

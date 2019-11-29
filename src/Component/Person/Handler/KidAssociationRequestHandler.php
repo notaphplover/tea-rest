@@ -2,6 +2,7 @@
 
 namespace App\Component\Person\Handler;
 
+use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\Person\Exception\KidAssociationAlreadyExists;
 use App\Component\Person\Exception\KidAssociationRequestAlreadyExists;
 use App\Component\Person\Service\GuardianKidPendingRelationManager;
@@ -72,6 +73,7 @@ class KidAssociationRequestHandler
      * @throws KidAssociationRequestAlreadyExists
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ResourceNotFoundException
      */
     public function handle(array $data, int $guardianId): GuardianKidPendingRelation
     {
@@ -82,6 +84,10 @@ class KidAssociationRequestHandler
 
         $kidNickname = $data[KidAssociationRequestValidation::FIELD_NICKNAME];
         $kid = $this->kidManager->getByNick($kidNickname);
+        if (null === $kid) {
+            throw new ResourceNotFoundException();
+        }
+
         $guardian = $this->guardianManager->getReference($guardianId);
 
         // Look for current relationships

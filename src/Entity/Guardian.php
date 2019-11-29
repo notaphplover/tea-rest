@@ -16,7 +16,7 @@ class Guardian extends Person implements UserInterface
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
+     * @var null|int
      */
     private $id;
 
@@ -46,9 +46,9 @@ class Guardian extends Person implements UserInterface
     }
 
     /**
-     * @return int
+     * @return null|int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -1,0 +1,22 @@
+App\Entity\ConcreteTask:
+    attributes:
+        createdAt:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        day:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        guardian:
+            groups: ["concrete-task-full"]
+        id:
+            groups: ["concrete-task-id", "concrete-task-common", "concrete-task-full"]
+        imgUrl:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        kid:
+            groups: ["concrete-task-full"]
+        subTasks:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        text:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        timeEnd:
+            groups: ["concrete-task-common", "concrete-task-full"]
+        timeStart:
+            groups: ["concrete-task-common", "concrete-task-full"]

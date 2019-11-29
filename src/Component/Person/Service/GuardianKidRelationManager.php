@@ -9,9 +9,12 @@ use App\Repository\GuardianRepository;
 /**
  * Class GuardianKidRelationManager
  *
+ * @method GuardianKidRelation getById(int $id)
+ * @method GuardianKidRelation[] getByIds(int $id)
  * @method GuardianKidRelation[] getByKids(int[] $kidIds, bool $warmUpGuardians)
  * @method GuardianKidRelationRepository getEntityRepository()
  * @method GuardianKidRelation getReference($id)
+ * @method void remove(GuardianKidRelation $entity, bool $commit = true)
  * @method void update(GuardianKidRelation $guardianKidRelation, bool $commit = true)
  */
 class GuardianKidRelationManager extends GuardianKidRelationBaseManager
