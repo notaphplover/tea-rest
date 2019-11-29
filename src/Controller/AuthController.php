@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
-use App\Component\Auth\Service\LoginWithGoogleAndroid;
+use App\Component\Auth\Service\LoginWithGoogleAndroidHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -26,7 +26,7 @@ class AuthController extends AbstractFOSRestController
     /**
      * @Rest\Post("/login/google/android")
      * @param Request $request
-     * @param LoginWithGoogleAndroid $loginWithGoogleHandler
+     * @param LoginWithGoogleAndroidHandler $loginWithGoogleHandler
      * @return JsonResponse
      * @throws \App\Component\Auth\Exception\InvalidTokenException
      * @throws \App\Component\Auth\Exception\MissingEmailClaimException
@@ -37,7 +37,7 @@ class AuthController extends AbstractFOSRestController
      */
     public function googleAndroidLoginAction(
         Request $request,
-        LoginWithGoogleAndroid $loginWithGoogleHandler
+        LoginWithGoogleAndroidHandler $loginWithGoogleHandler
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
