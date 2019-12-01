@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
-use App\Component\Auth\Service\LoginWithGoogleAndroidHandler;
-use App\Component\Auth\Service\LoginWithGoogleIOSHandler;
-use App\Component\Auth\Service\LoginWithGoogleWebHandler;
+use App\Component\Auth\Handler\LoginWithGoogleAndroidHandler;
+use App\Component\Auth\Handler\LoginWithGoogleIOSHandler;
+use App\Component\Auth\Handler\LoginWithGoogleWebHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
