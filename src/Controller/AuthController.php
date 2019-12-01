@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\Auth\Service\LoginWithGoogleAndroidHandler;
+use App\Component\Auth\Service\LoginWithGoogleIOSHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -42,6 +43,16 @@ class AuthController extends AbstractFOSRestController
     {
         $content = $this->parseJsonFromRequest($request);
         $token = $loginWithGoogleHandler->handle($content);
+        return $this->getTokenResponse((string)$token);
+    }
+
+    public function googleIOSLoginAction(
+        Request $request,
+        LoginWithGoogleIOSHandler $loginWithGoogleIOSHandler
+    ) : JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        $token = $loginWithGoogleIOSHandler->handle($content);
         return $this->getTokenResponse((string)$token);
     }
 
