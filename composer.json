@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "facebook/graph-sdk": "^5.7",
         "friendsofsymfony/rest-bundle": "^2.6",
         "google/apiclient": "^2.4",
         "lcobucci/jwt": "^3.3",
