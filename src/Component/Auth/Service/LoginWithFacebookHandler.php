@@ -11,7 +11,7 @@ use App\Component\Validation\Exception\InvalidInputException;
 class LoginWithFacebookHandler
 {
     /**
-     * @var FacebookAuthClient
+     * @var AppFacebookAuthClient
      */
     protected $facebookAuthClient;
 
@@ -32,13 +32,13 @@ class LoginWithFacebookHandler
 
     /**
      * LoginWithFacebookHandler constructor.
-     * @param FacebookAuthClient $facebookAuthClient
+     * @param AppFacebookAuthClient $facebookAuthClient
      * @param GuardianManager $guardianManager
      * @param JWTBuilder $jwtBuilder
      * @param LoginWithFacebookValidation $loginWithFacebookValidation
      */
     public function __construct(
-        FacebookAuthClient $facebookAuthClient,
+        AppFacebookAuthClient $facebookAuthClient,
         GuardianManager $guardianManager,
         JWTBuilder $jwtBuilder,
         LoginWithFacebookValidation $loginWithFacebookValidation

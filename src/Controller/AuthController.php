@@ -6,6 +6,7 @@ use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\Auth\Handler\LoginWithGoogleAndroidHandler;
 use App\Component\Auth\Handler\LoginWithGoogleIOSHandler;
 use App\Component\Auth\Handler\LoginWithGoogleWebHandler;
+use App\Component\Auth\Service\LoginWithFacebookHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -24,6 +25,28 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthController extends AbstractFOSRestController
 {
     use ControllerHelper;
+
+    /**
+     * @Rest\Post("/login/facebook")
+     *
+     * @param Request $request
+     * @param LoginWithFacebookHandler $loginWithFacebookHandler
+     * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\InvalidTokenException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
+    public function facebookLoginAction(
+        Request $request,
+        LoginWithFacebookHandler $loginWithFacebookHandler
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        $token = $loginWithFacebookHandler->handle($content);
+        return $this->getTokenResponse((string)$token);
+    }
 
     /**
      * @SWG\Post(
