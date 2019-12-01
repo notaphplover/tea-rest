@@ -26,7 +26,43 @@ class AuthController extends AbstractFOSRestController
     use ControllerHelper;
 
     /**
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app using a Google account.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"token"},
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Google's Id Token."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/login/google/android")
+     *
      * @param Request $request
      * @param LoginWithGoogleAndroidHandler $loginWithGoogleHandler
      * @return JsonResponse
@@ -48,6 +84,41 @@ class AuthController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app using a Google account.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"token"},
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Google's Id Token."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/login/google/ios")
      *
      * @param Request $request
@@ -71,6 +142,41 @@ class AuthController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app using a Google account.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"token"},
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Google's Id Token."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @Rest\Post("/login/google/web")
      *
      * @param Request $request
