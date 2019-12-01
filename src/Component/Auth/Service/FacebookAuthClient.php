@@ -14,6 +14,10 @@ abstract class FacebookAuthClient
      */
     protected $appId;
     /**
+     * @var Facebook
+     */
+    protected $fb;
+    /**
      * @var OAuth2Client
      */
     protected $oAuth2Client;
@@ -22,11 +26,11 @@ abstract class FacebookAuthClient
     {
         $this->appId = $appId;
 
-        $fb = new Facebook([
+        $this->fb = new Facebook([
             'app_id' => $appId,
             'app_secret' => $appSecret,
         ]);
-        $this->oAuth2Client = $fb->getOAuth2Client();
+        $this->oAuth2Client = $this->fb->getOAuth2Client();
     }
 
     /**
@@ -40,9 +44,12 @@ abstract class FacebookAuthClient
             $tokenMetadata = $this->oAuth2Client->debugToken($accessToken);
             $tokenMetadata->validateAppId($this->appId);
             $tokenMetadata->validateExpiration();
+            $this->fb->setDefaultAccessToken($accessToken);
+            $response = $this->fb->get('/me?locale=en_US&fields=name,email');
+            $userNode = $response->getGraphUser();
+            return $userNode->getField('email');
         } catch (FacebookSDKException $exception) {
             throw new InvalidTokenException($exception);
         }
-        return $tokenMetadata->getMetadataProperty('email');
     }
 }
