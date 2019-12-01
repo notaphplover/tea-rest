@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\Auth\Service\LoginWithGoogleAndroidHandler;
 use App\Component\Auth\Service\LoginWithGoogleIOSHandler;
+use App\Component\Auth\Service\LoginWithGoogleWebHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -46,6 +47,19 @@ class AuthController extends AbstractFOSRestController
         return $this->getTokenResponse((string)$token);
     }
 
+    /**
+     * @Rest\Post("/login/google/ios")
+     *
+     * @param Request $request
+     * @param LoginWithGoogleIOSHandler $loginWithGoogleIOSHandler
+     * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\InvalidTokenException
+     * @throws \App\Component\Auth\Exception\MissingEmailClaimException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
     public function googleIOSLoginAction(
         Request $request,
         LoginWithGoogleIOSHandler $loginWithGoogleIOSHandler
@@ -53,6 +67,29 @@ class AuthController extends AbstractFOSRestController
     {
         $content = $this->parseJsonFromRequest($request);
         $token = $loginWithGoogleIOSHandler->handle($content);
+        return $this->getTokenResponse((string)$token);
+    }
+
+    /**
+     * @Rest\Post("/login/google/web")
+     *
+     * @param Request $request
+     * @param LoginWithGoogleWebHandler $loginWithGoogleWebHandler
+     * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\InvalidTokenException
+     * @throws \App\Component\Auth\Exception\MissingEmailClaimException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
+    public function googleWebLoginAction(
+        Request $request,
+        LoginWithGoogleWebHandler $loginWithGoogleWebHandler
+    ) : JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        $token = $loginWithGoogleWebHandler->handle($content);
         return $this->getTokenResponse((string)$token);
     }
 
