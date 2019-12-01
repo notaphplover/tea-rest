@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Component\Auth\Service;
+namespace App\Component\Auth\Handler;
 
+use App\Component\Auth\Service\GoogleAndroidAuthClient;
 use App\Component\Auth\Validation\LoginWithGoogleValidation;
 use App\Component\JWT\Service\JWTBuilder;
 use App\Component\Person\Service\GuardianManager;
 
-class LoginWithGoogleWebHandler extends LoginWithGoogleHandler
+class LoginWithGoogleAndroidHandler extends LoginWithGoogleHandler
 {
     public function __construct(
-        GoogleWebAuthClient $googleWebAuthClient,
+        GoogleAndroidAuthClient $googleAndroidAuthClient,
         GuardianManager $guardianManager,
         JWTBuilder $jwtBuilder,
         LoginWithGoogleValidation $loginWithGoogleValidation
     ) {
-        parent::__construct($googleWebAuthClient, $guardianManager, $jwtBuilder, $loginWithGoogleValidation);
+        parent::__construct($googleAndroidAuthClient, $guardianManager, $jwtBuilder, $loginWithGoogleValidation);
     }
 }

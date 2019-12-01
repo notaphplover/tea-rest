@@ -5,7 +5,6 @@ namespace App\Component\Auth\Service;
 use App\Component\Auth\Exception\InvalidTokenException;
 use App\Component\Auth\Exception\MissingEmailClaimException;
 use Google_Client;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 abstract class GoogleAuthClient
 {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Component\Auth\Service;
+namespace App\Component\Auth\Handler;
 
+use App\Component\Auth\Service\GoogleAuthClient;
 use App\Component\Auth\Validation\LoginWithGoogleValidation;
 use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\JWT\Service\JWTBuilder;
