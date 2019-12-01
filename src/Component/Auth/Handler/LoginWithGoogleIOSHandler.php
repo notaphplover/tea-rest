@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Component\Auth\Service;
+namespace App\Component\Auth\Handler;
 
+use App\Component\Auth\Service\GoogleIOSAuthClient;
 use App\Component\Auth\Validation\LoginWithGoogleValidation;
 use App\Component\JWT\Service\JWTBuilder;
 use App\Component\Person\Service\GuardianManager;
 
-class LoginWithGoogleAndroidHandler extends LoginWithGoogleHandler
+class LoginWithGoogleIOSHandler extends LoginWithGoogleHandler
 {
     public function __construct(
-        GoogleAndroidAuthClient $googleAndroidAuthClient,
+        GoogleIOSAuthClient $googleAndroidAuthClient,
         GuardianManager $guardianManager,
         JWTBuilder $jwtBuilder,
         LoginWithGoogleValidation $loginWithGoogleValidation
