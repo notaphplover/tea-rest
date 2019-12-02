@@ -6,6 +6,7 @@ use App\Component\Auth\Exception\InvalidCredentialsException;
 use App\Component\Auth\Handler\LoginWithGoogleAndroidHandler;
 use App\Component\Auth\Handler\LoginWithGoogleIOSHandler;
 use App\Component\Auth\Handler\LoginWithGoogleWebHandler;
+use App\Component\Auth\Service\LoginWithFacebookHandler;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
@@ -24,6 +25,63 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthController extends AbstractFOSRestController
 {
     use ControllerHelper;
+
+    /**
+     * @Rest\Post("/login/facebook")
+     *
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app using a Facebook account.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"token"},
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="EAAGsNaZBn9UoB...",
+     *                  description="Facebook's Access Token."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
+     * @param Request $request
+     * @param LoginWithFacebookHandler $loginWithFacebookHandler
+     * @return JsonResponse
+     * @throws \App\Component\Auth\Exception\InvalidTokenException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
+     * @throws \App\Component\Validation\Exception\MissingBodyException
+     */
+    public function facebookLoginAction(
+        Request $request,
+        LoginWithFacebookHandler $loginWithFacebookHandler
+    ): JsonResponse
+    {
+        $content = $this->parseJsonFromRequest($request);
+        $token = $loginWithFacebookHandler->handle($content);
+        return $this->getTokenResponse((string)$token);
+    }
 
     /**
      * @SWG\Post(

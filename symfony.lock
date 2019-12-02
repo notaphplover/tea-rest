@@ -78,6 +78,9 @@
     "exsyst/swagger": {
         "version": "v0.4.1"
     },
+    "facebook/graph-sdk": {
+        "version": "5.7.0"
+    },
     "firebase/php-jwt": {
         "version": "v5.0.0"
     },
@@ -150,6 +153,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "php": {
+        "version": "7.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
