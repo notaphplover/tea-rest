@@ -2,6 +2,10 @@
 
 This document contains the registry of the changes between versions.
 
+## 1.0.0-alpha.1
+
+- Added migration system.
+
 ## 1.0.0-alpha.0
 
 Added API basic modules:
