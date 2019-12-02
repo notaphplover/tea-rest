@@ -29,6 +29,41 @@ class AuthController extends AbstractFOSRestController
     /**
      * @Rest\Post("/login/facebook")
      *
+     * @SWG\Post(
+     *     tags={"auth"},
+     *     consumes={"application/json"},
+     *     description="It logs an existing user in the app using a Facebook account.",
+     *     @SWG\Parameter(
+     *          name="loginData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"token"},
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="EAAGsNaZBn9UoB...",
+     *                  description="Facebook's Access Token."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Valid token for the existing user.",
+     *          @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(
+     *                  property="token",
+     *                  type="string",
+     *                  example="eyJ0eXAiOiJKV1QiLCJhbGciOi...",
+     *                  description="Api Token. This token is a JWT signed with the backend's certificate"
+     *              )
+     *          )
+     *     )
+     *  )
+     *
      * @param Request $request
      * @param LoginWithFacebookHandler $loginWithFacebookHandler
      * @return JsonResponse

@@ -22,6 +22,12 @@ abstract class FacebookAuthClient
      */
     protected $oAuth2Client;
 
+    /**
+     * FacebookAuthClient constructor.
+     * @param string $appId
+     * @param string $appSecret
+     * @throws FacebookSDKException
+     */
     public function __construct(string $appId, string $appSecret)
     {
         $this->appId = $appId;
