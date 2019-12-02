@@ -22,7 +22,7 @@ class Kid extends Person
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
+     * @var null|int
      */
     private $id;
 
@@ -43,7 +43,7 @@ class Kid extends Person
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

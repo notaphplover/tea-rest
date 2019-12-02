@@ -2,23 +2,28 @@
 
 namespace App\Component\Person\Service;
 
+use App\Component\Common\Service\BaseManager;
 use App\Entity\Guardian;
 use App\Repository\GuardianRepository;
 
-class GuardianManager
+/**
+ * Class GuardianManager
+ *
+ * @method Guardian getById(int $id)
+ * @method Guardian[] getByIds(int $id)
+ * @method GuardianRepository getEntityRepository()
+ * @method Guardian getReference($id)
+ * @method void remove(Guardian $entity, bool $commit = true)
+ */
+class GuardianManager extends BaseManager
 {
-    /**
-     * @var GuardianRepository
-     */
-    protected $guardianRepository;
-
     /**
      * GuardianManager constructor.
      * @param GuardianRepository $guardianRepository
      */
     public function __construct(GuardianRepository $guardianRepository)
     {
-        $this->guardianRepository = $guardianRepository;
+        parent::__construct($guardianRepository);
     }
 
     /**
@@ -27,7 +32,7 @@ class GuardianManager
      */
     public function getByEmail(string $email): ?Guardian
     {
-        return $this->guardianRepository->findOneBy(['email' => $email]);
+        return $this->getEntityRepository()->findOneBy(['email' => $email]);
     }
 
     /**
@@ -36,8 +41,8 @@ class GuardianManager
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function update(Guardian $guardian, bool $commit = true): void
+    public function update($guardian, bool $commit = true): void
     {
-        $this->guardianRepository->update($guardian, $commit);
+        $this->getEntityRepository()->update($guardian, $commit);
     }
 }

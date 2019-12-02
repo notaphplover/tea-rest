@@ -1,0 +1,10 @@
+App\Entity\ConcreteSubTask:
+    attributes:
+        id:
+            groups: ["concrete-subtask-id", "concrete-subtask-common", "concrete-subtask-full"]
+        imgUrl:
+            groups: ["concrete-subtask-common", "concrete-subtask-full"]
+        task:
+            groups: ["concrete-subtask-full"]
+        text:
+            groups: ["concrete-subtask-common", "concrete-subtask-full"]

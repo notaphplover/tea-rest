@@ -20,7 +20,7 @@ class DateTimeStringValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, DateTimeStringConstraint::class);
         }
         try {
-            $dateTime = new \DateTime($value);
+            new \DateTime($value);
         } catch (\Exception $exception) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }

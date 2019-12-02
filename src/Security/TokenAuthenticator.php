@@ -64,15 +64,18 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
+    /**
+     * @param mixed $credentials
+     * @param UserProviderInterface $userProvider
+     * @return UserInterface|void|null
+     */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = $credentials['token'];
         if (null === $token) {
             return;
         }
-        $username = $this->jwtBuilder->getUsername($token);
-
-        return $userProvider->loadUserByUsername($username);
+        return $this->jwtBuilder->getUser($token);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
@@ -84,9 +87,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         $data = [
             'message' => strtr($exception->getMessageKey(), $exception->getMessageData())
-
-            // or to translate this message
-            // $this->translator->trans($exception->getMessageKey(), $exception->getMessageData())
         ];
 
         return new JsonResponse($data, Response::HTTP_FORBIDDEN);
