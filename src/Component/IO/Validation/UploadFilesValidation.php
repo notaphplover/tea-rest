@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UploadFilesValidation extends BaseValidation
 {
+    public const FILE_MAX_LENGTH = 2097152;
     public const FILE_PATH_REGEX = '@^\w[\w-]*(\/\w[\w-]*)*(\.\w+)$@';
     public const FILES_MIN = 1;
 
@@ -26,7 +27,10 @@ class UploadFilesValidation extends BaseValidation
                 self::FIELD_FILES => [
                     new Assert\Count(['min' => self::FILES_MIN]),
                     new Assert\All(new Assert\Collection([
-                        self::FIELD_FILE_CONTENT => new Assert\Type(['type' => 'string']),
+                        self::FIELD_FILE_CONTENT => [
+                            new Assert\Length(['max' => self::FILE_MAX_LENGTH]),
+                            new Assert\Type(['type' => 'string'])
+                        ],
                         self::FIELD_FILE_PATH => new Assert\Regex(self::FILE_PATH_REGEX),
                     ]))
                 ],
