@@ -19,7 +19,6 @@ class JWTBuilder
     private const CLAIM_ID = self::API_CLAIM_NAMESPACE . 'id';
     private const CLAIM_NAME = self::API_CLAIM_NAMESPACE . 'name';
     private const CLAIM_SURNAME = self::API_CLAIM_NAMESPACE . 'surname';
-    private const CLAIM_ROLES = self::API_CLAIM_NAMESPACE . 'roles';
 
     /**
      * @var Key
@@ -65,7 +64,6 @@ class JWTBuilder
             ->withClaim(self::CLAIM_ID, $user->getId())
             ->withClaim(self::CLAIM_EMAIL, $user->getUsername())
             ->withClaim(self::CLAIM_NAME, $user->getName())
-            ->withClaim(self::CLAIM_ROLES, $user->getRoles())
             ->withClaim(self::CLAIM_SURNAME, $user->getSurname())
             ->getToken($this->signer,  $this->privateKey);
     }
@@ -80,7 +78,6 @@ class JWTBuilder
             $this->getEmail($token),
             $this->getId($token),
             $this->getName($token),
-            $this->getRoles($token),
             $this->getSurname($token)
         );
     }
@@ -133,15 +130,6 @@ class JWTBuilder
     private function getName(Token $token): string
     {
         return $token->getClaim(self::CLAIM_NAME);
-    }
-
-    /**
-     * @param Token $token
-     * @return string[]
-     */
-    private function getRoles(Token $token): array
-    {
-        return $token->getClaim(self::CLAIM_ROLES);
     }
 
     /**

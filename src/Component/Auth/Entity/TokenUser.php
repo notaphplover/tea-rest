@@ -23,11 +23,6 @@ class TokenUser implements UserInterface
     private $name;
 
     /**
-     * @var string[]
-     */
-    private $roles;
-
-    /**
      * @var string
      */
     private $surname;
@@ -40,12 +35,11 @@ class TokenUser implements UserInterface
      * @param string[] $roles
      * @param string $surname
      */
-    public function __construct(string $email, int $id, string $name, array $roles, string $surname)
+    public function __construct(string $email, int $id, string $name, string $surname)
     {
         $this->email = $email;
         $this->id = $id;
         $this->name = $name;
-        $this->roles = $roles;
         $this->surname = $surname;
     }
 
@@ -96,7 +90,7 @@ class TokenUser implements UserInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return [];
     }
 
     /**
