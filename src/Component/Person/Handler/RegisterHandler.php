@@ -3,6 +3,7 @@
 namespace App\Component\Person\Handler;
 
 use App\Component\Auth\Exception\UserAlreadyExistsException;
+use App\Component\Common\Service\UuidGenerator;
 use App\Component\JWT\Service\JWTBuilder;
 use App\Component\Person\Command\RegisterCommand;
 use App\Component\Person\Service\GuardianManager;
@@ -33,16 +34,23 @@ class RegisterHandler
      */
     protected $registerValidation;
 
+    /**
+     * @var UuidGenerator
+     */
+    protected $uuidGenerator;
+
     public function __construct(
         GuardianManager $guardianManager,
         JWTBuilder $jwtBuilder,
         RegisterValidation $registerValidation,
-        UserPasswordEncoderInterface $passwordEncoder
+        UserPasswordEncoderInterface $passwordEncoder,
+        UuidGenerator $uuidGenerator
     ) {
         $this->guardianManager = $guardianManager;
         $this->jwtBuilder = $jwtBuilder;
         $this->passwordEncoder = $passwordEncoder;
         $this->registerValidation = $registerValidation;
+        $this->uuidGenerator = $uuidGenerator;
     }
 
     /**
@@ -69,6 +77,7 @@ class RegisterHandler
             ->setEmail($data[RegisterValidation::FIELD_EMAIL])
             ->setName($data[RegisterValidation::FIELD_NAME])
             ->setSurname($data[RegisterValidation::FIELD_SURNAME])
+            ->setUuid($this->uuidGenerator->generateV4())
         ;
 
         $guardian

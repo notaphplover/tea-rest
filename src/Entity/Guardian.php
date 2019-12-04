@@ -33,9 +33,10 @@ class Guardian extends Person implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="string", length=36)
+     * @var string
      */
-    private $roles = [];
+    private $uuid;
 
     /**
      * @return string
@@ -66,7 +67,7 @@ class Guardian extends Person implements UserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        return [];
     }
 
     /**
@@ -76,6 +77,14 @@ class Guardian extends Person implements UserInterface
     public function getUsername(): string
     {
         return $this->getEmail();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
     }
 
     /**
@@ -115,12 +124,12 @@ class Guardian extends Person implements UserInterface
     }
 
     /**
-     * @param array $roles
+     * @param string $uuid
      * @return $this
      */
-    public function setRoles(array $roles): Guardian
+    public function setUuid(string $uuid): Guardian
     {
-        $this->roles = $roles;
+        $this->uuid = $uuid;
         return $this;
     }
 }
