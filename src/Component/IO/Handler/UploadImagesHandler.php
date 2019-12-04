@@ -6,6 +6,7 @@ use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\IO\Validation\UploadFilesValidation;
 use App\Component\Person\Service\GuardianManager;
 use App\Component\Validation\Exception\InvalidInputException;
+use App\Entity\Guardian;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class UploadImagesHandler extends BaseUploadImageHandler
@@ -57,7 +58,17 @@ class UploadImagesHandler extends BaseUploadImageHandler
             $path = $file[UploadFilesValidation::FIELD_FILE_PATH];
             $content = $this->decodeBase64Content($file[UploadFilesValidation::FIELD_FILE_CONTENT]);
 
-            $this->uploadFile($content, $this->usersFolder . $path, $overwrite);
+            $this->uploadFile($content, $this->buildImagePath($guardian, $path), $overwrite);
         }
+    }
+
+    /**
+     * @param Guardian $guardian
+     * @param string $path
+     * @return string
+     */
+    private function buildImagePath(Guardian $guardian, string $path): string
+    {
+        return $this->usersFolder . $guardian->getUuid() . DIRECTORY_SEPARATOR . $path;
     }
 }
