@@ -21,7 +21,7 @@ final class Version20191204220758 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-        
+
         $this->addSql('ALTER TABLE guardian ADD uuid VARCHAR(36) NOT NULL, DROP roles');
     }
 
