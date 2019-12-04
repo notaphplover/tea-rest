@@ -4,6 +4,8 @@
 /config/jwt/public.pem
 /config/parameters.yaml
 
+/public/assets
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
