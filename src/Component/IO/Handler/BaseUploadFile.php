@@ -30,6 +30,19 @@ abstract class BaseUploadFile
         if (!$overwrite && $this->filesystem->exists($path)) {
             throw new FileAlreadyExistsException();
         }
+        /*
+         * We must stay safe against script injection attacks.
+         *
+         * 1. Create a void file.
+         * 2. Set read only permissions to the file.
+         * 3. Dump the content to the file.
+         *
+         * With this implementation it's not possible to execute the script.
+         * If the attacker attempts to execute the script before the chmod instruction, and empty file will be executed.
+         * If the attacker attempts to execute the script after the chmod, it has read only permissions.
+         */
+        $this->filesystem->dumpFile($path, '');
+        $this->filesystem->chmod($path, 0644);
         $this->filesystem->dumpFile($path, $content);
     }
 

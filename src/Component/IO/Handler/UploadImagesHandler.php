@@ -2,6 +2,7 @@
 
 namespace App\Component\IO\Handler;
 
+use App\Component\Auth\Entity\TokenUser;
 use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\IO\Service\ImageManager;
 use App\Component\IO\Service\ImagePathProvider;
@@ -55,7 +56,7 @@ class UploadImagesHandler extends BaseUploadImage
 
     /**
      * @param array $data
-     * @param int $guardianId
+     * @param TokenUser $tokenUser
      * @return Image[]
      * @throws InvalidInputException
      * @throws ResourceNotFoundException
@@ -65,46 +66,46 @@ class UploadImagesHandler extends BaseUploadImage
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function handle(array $data, int $guardianId): array
+    public function handle(array $data, TokenUser $tokenUser): array
     {
         $validation = $this->uploadFilesValidation->validate($data);
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
         }
 
-        $guardian = $this->guardianManager->getById($guardianId);
+        $guardian = $this->guardianManager->getById($tokenUser->getId());
         if (null === $guardian) {
             throw new ResourceNotFoundException();
         }
 
-        $files = $data[UploadImagesValidation::FIELD_IMAGES];
-        $images = [];
-        foreach ($files as $file) {
-            $path = $file[UploadImagesValidation::FIELD_IMAGE_PATH];
-            $content = $this->decodeBase64Content($file[UploadImagesValidation::FIELD_IMAGE_CONTENT]);
-            $text = $file[UploadImagesValidation::FIELD_IMAGE_TEXT];
+        $images = $data[UploadImagesValidation::FIELD_IMAGES];
+        $imagesEntities = [];
+        foreach ($images as $image) {
+            $path = $image[UploadImagesValidation::FIELD_IMAGE_PATH];
+            $content = $this->decodeBase64Content($image[UploadImagesValidation::FIELD_IMAGE_CONTENT]);
+            $text = $image[UploadImagesValidation::FIELD_IMAGE_TEXT];
             $this->uploadFile(
                 $content,
-                $this->imagePathProvider->buildUserAbsoluteImagePath($guardian->getUuid(), $path),
+                $this->imagePathProvider->buildUserAbsoluteImagePath($tokenUser->getUuid(), $path),
                 false
             );
-            $images[] = $this->handleImageEntity($guardian, $path, $text);
+            $imagesEntities[] = $this->handleImageEntity($tokenUser, $path, $text);
         }
 
-        return $images;
+        return $imagesEntities;
     }
 
     /**
-     * @param Guardian $guardian
+     * @param TokenUser $tokenUser
      * @param string $path
      * @param string $text
      * @return Image
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function handleImageEntity(Guardian $guardian, string $path, string $text): Image
+    private function handleImageEntity(TokenUser $tokenUser, string $path, string $text): Image
     {
-        $scope = $this->imagePathProvider->buildUserScope($guardian->getUuid());
+        $scope = $this->imagePathProvider->buildUserScope($tokenUser->getUuid());
         return $this->handleImageEntityCreateImage($path, $scope, $text);
     }
 
