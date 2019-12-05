@@ -14,11 +14,15 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class JWTBuilder
 {
+    public const TOKEN_VERSION = 'v1.0.1';
+
     private const API_CLAIM_NAMESPACE = 'http://www.api-tea.dgp.ucm.com/';
     private const CLAIM_EMAIL = self::API_CLAIM_NAMESPACE . 'email';
     private const CLAIM_ID = self::API_CLAIM_NAMESPACE . 'id';
     private const CLAIM_NAME = self::API_CLAIM_NAMESPACE . 'name';
     private const CLAIM_SURNAME = self::API_CLAIM_NAMESPACE . 'surname';
+    private const CLAIM_UUID = self::API_CLAIM_NAMESPACE . 'uuid';
+    private const CLAIM_VERSION = self::API_CLAIM_NAMESPACE . 'version';
 
     /**
      * @var Key
@@ -65,6 +69,8 @@ class JWTBuilder
             ->withClaim(self::CLAIM_EMAIL, $user->getUsername())
             ->withClaim(self::CLAIM_NAME, $user->getName())
             ->withClaim(self::CLAIM_SURNAME, $user->getSurname())
+            ->withClaim(self::CLAIM_UUID, $user->getUuid())
+            ->withClaim(self::CLAIM_VERSION, self::TOKEN_VERSION)
             ->getToken($this->signer,  $this->privateKey);
     }
 
@@ -78,7 +84,8 @@ class JWTBuilder
             $this->getEmail($token),
             $this->getId($token),
             $this->getName($token),
-            $this->getSurname($token)
+            $this->getSurname($token),
+            $this->getUuid($token)
         );
     }
 
@@ -102,7 +109,8 @@ class JWTBuilder
     public function validateToken(Token $token): bool
     {
         return $token->verify($this->signer, $this->publicKey)
-            && $token->validate(new ValidationData());
+            && $token->validate(new ValidationData())
+            && $this->hasValidVersion($token);
     }
 
     /**
@@ -139,5 +147,28 @@ class JWTBuilder
     private function getSurname(Token $token): string
     {
         return $token->getClaim(self::CLAIM_SURNAME);
+    }
+
+    /**
+     * @param Token $token
+     * @return string
+     */
+    public function getUuid(Token $token): string
+    {
+        return $token->getClaim(self::CLAIM_UUID);
+    }
+
+    /**
+     * @param Token $token
+     * @return string
+     */
+    private function getVersion(Token $token): string
+    {
+        return $token->getClaim(self::CLAIM_VERSION);
+    }
+
+    private function hasValidVersion(Token $token): string
+    {
+        return $token->hasClaim(self::CLAIM_VERSION) && self::TOKEN_VERSION === $this->getVersion($token);
     }
 }

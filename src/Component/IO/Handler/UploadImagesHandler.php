@@ -98,7 +98,6 @@ class UploadImagesHandler extends BaseUploadImage
      * @param Guardian $guardian
      * @param string $path
      * @param string $text
-     * @param bool $overwrite
      * @return Image
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
