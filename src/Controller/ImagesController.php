@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
+use App\Component\IO\Handler\DeleteImageHandler;
 use App\Component\IO\Handler\UpdateImageHandler;
 use App\Component\IO\Handler\UploadImagesHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +22,32 @@ use Symfony\Component\Routing\Annotation\Route;
 class ImagesController extends AbstractFOSRestController
 {
     use ControllerHelper;
+
+    /**
+     * @Rest\Delete("/{image}", requirements={"image"="\d+"})
+     *
+     * @param DeleteImageHandler $deleteImageHandler
+     * @param int $image
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
+     * @throws \App\Component\Common\Exception\ResourceNotFoundException
+     */
+    public function deleteUploadedImageAction(
+        DeleteImageHandler $deleteImageHandler,
+        int $image,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $deletedImage = $deleteImageHandler->handle($image, $this->getUser());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $deletedImage,
+                'json',
+                ['groups' => ['image-common']]
+            )
+        );
+    }
 
     /**
      * @Rest\Put("/{image}", requirements={"image"="\d+"})
@@ -37,6 +65,7 @@ class ImagesController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \App\Component\Common\Exception\AccessDeniedException
      */
     public function updateUploadedImageAction(
         int $image,
@@ -47,10 +76,10 @@ class ImagesController extends AbstractFOSRestController
     {
         $content = $this->parseJsonFromRequest($request);
 
-        $image = $updateImageHandler->handle($content, $image, $this->getUser());
+        $updatedImage = $updateImageHandler->handle($content, $image, $this->getUser());
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $image,
+                $updatedImage,
                 'json',
                 ['groups' => ['image-common']]
             )
@@ -73,6 +102,7 @@ class ImagesController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \App\Component\Common\Exception\AccessDeniedException
      */
     public function uploadImagesAction(
         Request $request,

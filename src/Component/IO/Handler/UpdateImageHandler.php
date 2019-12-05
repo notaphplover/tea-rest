@@ -9,18 +9,12 @@ use App\Component\IO\Exception\FileAlreadyExistsException;
 use App\Component\IO\Service\ImageManager;
 use App\Component\IO\Service\ImagePathProvider;
 use App\Component\IO\Validation\UpdateImageValidation;
-use App\Component\Person\Service\GuardianManager;
 use App\Component\Validation\Exception\InvalidInputException;
 use App\Entity\Image;
 use Symfony\Component\Filesystem\Filesystem;
 
 class UpdateImageHandler extends BaseUploadImage
 {
-    /**
-     * @var GuardianManager
-     */
-    protected $guardianManager;
-
     /**
      * @var ImageManager;
      */
@@ -37,14 +31,12 @@ class UpdateImageHandler extends BaseUploadImage
     protected $updateImageValidation;
 
     public function __construct(
-        GuardianManager $guardianManager,
         ImageManager $imageManager,
         ImagePathProvider $imagePathProvider,
         UpdateImageValidation $updateImageValidation
     )
     {
         parent::__construct();
-        $this->guardianManager = $guardianManager;
         $this->imageManager = $imageManager;
         $this->imagePathProvider = $imagePathProvider;
         $this->updateImageValidation = $updateImageValidation;
@@ -73,6 +65,9 @@ class UpdateImageHandler extends BaseUploadImage
         $image = $this->imageManager->getById($imageId);
         if (null === $imageId) {
             throw new ResourceNotFoundException();
+        }
+        if (Image::TYPE_USER !== $image->getType()) {
+            throw new AccessDeniedException();
         }
         if ($image->getGuardian()->getId() !== $tokenUser->getId()) {
             throw new AccessDeniedException();
