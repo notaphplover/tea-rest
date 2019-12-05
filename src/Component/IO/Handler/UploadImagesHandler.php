@@ -56,6 +56,7 @@ class UploadImagesHandler extends BaseUploadImage
     /**
      * @param array $data
      * @param int $guardianId
+     * @return Image[]
      * @throws InvalidInputException
      * @throws ResourceNotFoundException
      * @throws \App\Component\IO\Exception\BadBase64FileException
@@ -64,7 +65,7 @@ class UploadImagesHandler extends BaseUploadImage
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function handle(array $data, int $guardianId): void
+    public function handle(array $data, int $guardianId): array
     {
         $validation = $this->uploadFilesValidation->validate($data);
         if ($validation->count() !== 0) {
@@ -79,7 +80,7 @@ class UploadImagesHandler extends BaseUploadImage
         $overwrite = $ioPolicy[UploadImagesValidation::FIELD_POLICY_OVERWRITE];
 
         $files = $data[UploadImagesValidation::FIELD_IMAGES];
-
+        $images = [];
         foreach ($files as $file) {
             $path = $file[UploadImagesValidation::FIELD_IMAGE_PATH];
             $content = $this->decodeBase64Content($file[UploadImagesValidation::FIELD_IMAGE_CONTENT]);
@@ -88,8 +89,10 @@ class UploadImagesHandler extends BaseUploadImage
                 $content,
                 $this->imageProvider->buildUserAbsoluteImagePath($guardian->getUuid(), $path), $overwrite
             );
-            $this->handleImageEntity($guardian, $path, $text, $overwrite);
+            $images[] = $this->handleImageEntity($guardian, $path, $text, $overwrite);
         }
+
+        return $images;
     }
 
     /**
@@ -97,37 +100,42 @@ class UploadImagesHandler extends BaseUploadImage
      * @param string $path
      * @param string $text
      * @param bool $overwrite
+     * @return Image
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function handleImageEntity(Guardian $guardian, string $path, string $text, bool $overwrite): void
+    private function handleImageEntity(Guardian $guardian, string $path, string $text, bool $overwrite): Image
     {
         $relativePath = $this->imageProvider->buildUserRelativeImagePath($guardian->getUuid(), $path);
-        if ($overwrite) {
-            $image = $this->imageManager->getByPath($relativePath);
-            if (null === $image) {
-                $this->handleImageEntityCreateImage($relativePath, $text);
-            } else {
-                $this->handleImageEntityUpdateImage($image, $relativePath, $text);
-            }
-        } else {
-            $this->handleImageEntityCreateImage($relativePath, $text);
+        if (!$overwrite) {
+            return $this->handleImageEntityCreateImage($relativePath, $text);
         }
+
+        $image = $this->imageManager->getByPath($relativePath);
+
+        if (null === $image) {
+            return $this->handleImageEntityCreateImage($relativePath, $text);
+        }
+
+        $this->handleImageEntityUpdateImage($image, $relativePath, $text);
+        return $image;
     }
 
     /**
      * @param string $path
      * @param string $text
+     * @return Image
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function handleImageEntityCreateImage(string $path, string $text): void
+    private function handleImageEntityCreateImage(string $path, string $text): Image
     {
         $image = (new Image())
             ->setPath($path)
             ->setText($text)
             ->setType(Image::TYPE_USER);
         $this->imageManager->update($image, true);
+        return $image;
     }
 
     /**

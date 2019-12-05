@@ -32,6 +32,8 @@ class ImagesController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\InvalidInputException
      * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
      * @throws \App\Component\Validation\Exception\MissingBodyException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function uploadImagesAction(
         Request $request,
@@ -42,7 +44,13 @@ class ImagesController extends AbstractFOSRestController
         $content = $this->parseJsonFromRequest($request);
         /** @var $user TokenUser */
         $user = $this->getUser();
-        $uploadImagesHandler->handle($content, $user->getId());
-        return new JsonResponse();
+        $images = $uploadImagesHandler->handle($content, $user->getId());
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $images,
+                'json',
+                ['groups' => ['image-common']]
+            )
+        );
     }
 }
