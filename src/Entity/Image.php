@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Image
 {
+    public const TYPE_COMMON = 'common';
+    public const TYPE_USER = 'user';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
