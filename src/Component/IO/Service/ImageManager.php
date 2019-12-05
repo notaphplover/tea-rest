@@ -3,12 +3,32 @@
 namespace App\Component\IO\Service;
 
 use App\Component\Common\Service\BaseManager;
+use App\Entity\Image;
 use App\Repository\ImageRepository;
 
+/**
+ * Class ImageManager
+ * @package App\Component\IO\Service
+ *
+ * @method Image getById(int $id)
+ * @method Image[] getByIds(int $id)
+ * @method ImageRepository getEntityRepository()
+ * @method Image getReference($id)
+ * @method void remove(Image $entity, bool $commit = true)
+ */
 class ImageManager extends BaseManager
 {
     public function __construct(ImageRepository $entityRepository)
     {
         parent::__construct($entityRepository);
+    }
+
+    /**
+     * @param string $path
+     * @return Image|null
+     */
+    public function getByPath(string $path): ?Image
+    {
+        return $this->getEntityRepository()->findOneBy(['path' => $path]);
     }
 }

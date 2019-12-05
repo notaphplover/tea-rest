@@ -8,6 +8,7 @@ use App\Component\IO\Service\ImageProvider;
 use App\Component\IO\Validation\UploadImagesValidation;
 use App\Component\Person\Service\GuardianManager;
 use App\Component\Validation\Exception\InvalidInputException;
+use App\Entity\Guardian;
 use App\Entity\Image;
 
 class UploadImagesHandler extends BaseUploadImage
@@ -87,11 +88,61 @@ class UploadImagesHandler extends BaseUploadImage
                 $content,
                 $this->imageProvider->buildUserAbsoluteImagePath($guardian->getUuid(), $path), $overwrite
             );
-            $image = (new Image())
-                ->setPath($this->imageProvider->buildUserRelativeImagePath($guardian->getUuid(), $path))
-                ->setText($text)
-                ->setType(Image::TYPE_USER);
-            $this->imageManager->update($image, true);
+            $this->handleImageEntity($guardian, $path, $text, $overwrite);
         }
+    }
+
+    /**
+     * @param Guardian $guardian
+     * @param string $path
+     * @param string $text
+     * @param bool $overwrite
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function handleImageEntity(Guardian $guardian, string $path, string $text, bool $overwrite): void
+    {
+        $relativePath = $this->imageProvider->buildUserRelativeImagePath($guardian->getUuid(), $path);
+        if ($overwrite) {
+            $image = $this->imageManager->getByPath($relativePath);
+            if (null === $image) {
+                $this->handleImageEntityCreateImage($relativePath, $text);
+            } else {
+                $this->handleImageEntityUpdateImage($image, $relativePath, $text);
+            }
+        } else {
+            $this->handleImageEntityCreateImage($relativePath, $text);
+        }
+    }
+
+    /**
+     * @param string $path
+     * @param string $text
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function handleImageEntityCreateImage(string $path, string $text): void
+    {
+        $image = (new Image())
+            ->setPath($path)
+            ->setText($text)
+            ->setType(Image::TYPE_USER);
+        $this->imageManager->update($image, true);
+    }
+
+    /**
+     * @param Image $image
+     * @param string $path
+     * @param string $text
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function handleImageEntityUpdateImage(Image $image, string $path, string $text): void
+    {
+        $image
+            ->setPath($path)
+            ->setText($text)
+            ->setType(Image::TYPE_USER);
+        $this->imageManager->update($image, true);
     }
 }
