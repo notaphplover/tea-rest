@@ -10,10 +10,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *     indexes={
  *          @ORM\Index(name="image_path", columns={"path"}),
- *          @ORM\Index(name="image_path_scope", columns={"path", "scope"}),
  *          @ORM\Index(name="image_scope", columns={"scope"}),
  *     },
- *     name="image"
+ *     name="image",
+ *     uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *              name="image_path_scope",
+ *              columns={"path", "scope"}
+ *          )
+ *     }
  * )
  */
 class Image

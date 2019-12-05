@@ -16,8 +16,6 @@ class UploadImagesValidation extends BaseValidation
     public const FIELD_IMAGE_CONTENT = 'content';
     public const FIELD_IMAGE_TEXT = 'text';
     public const FIELD_IMAGES = 'images';
-    public const FIELD_POLICY = 'policy';
-    public const FIELD_POLICY_OVERWRITE = 'overwrite';
 
     /**
      * UploadFilesValidation constructor.
@@ -40,9 +38,6 @@ class UploadImagesValidation extends BaseValidation
                         ],
                     ]))
                 ],
-                self::FIELD_POLICY => new Assert\Collection([
-                    self::FIELD_POLICY_OVERWRITE => new Assert\Type(['type' => 'bool']),
-                ]),
             ])
         );
     }

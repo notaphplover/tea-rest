@@ -76,8 +76,6 @@ class UploadImagesHandler extends BaseUploadImage
         if (null === $guardian) {
             throw new ResourceNotFoundException();
         }
-        $ioPolicy = $data[UploadImagesValidation::FIELD_POLICY];
-        $overwrite = $ioPolicy[UploadImagesValidation::FIELD_POLICY_OVERWRITE];
 
         $files = $data[UploadImagesValidation::FIELD_IMAGES];
         $images = [];
@@ -87,9 +85,10 @@ class UploadImagesHandler extends BaseUploadImage
             $text = $file[UploadImagesValidation::FIELD_IMAGE_TEXT];
             $this->uploadFile(
                 $content,
-                $this->imagePathProvider->buildUserAbsoluteImagePath($guardian->getUuid(), $path), $overwrite
+                $this->imagePathProvider->buildUserAbsoluteImagePath($guardian->getUuid(), $path),
+                false
             );
-            $images[] = $this->handleImageEntity($guardian, $path, $text, $overwrite);
+            $images[] = $this->handleImageEntity($guardian, $path, $text);
         }
 
         return $images;
@@ -104,21 +103,10 @@ class UploadImagesHandler extends BaseUploadImage
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function handleImageEntity(Guardian $guardian, string $path, string $text, bool $overwrite): Image
+    private function handleImageEntity(Guardian $guardian, string $path, string $text): Image
     {
         $scope = $this->imagePathProvider->buildUserScope($guardian->getUuid());
-        if (!$overwrite) {
-            return $this->handleImageEntityCreateImage($path, $scope, $text);
-        }
-
-        $image = $this->imageManager->getByPathAndScope($path, $scope);
-
-        if (null === $image) {
-            return $this->handleImageEntityCreateImage($path, $scope, $text);
-        }
-
-        $this->handleImageEntityUpdateImage($image, $path, $scope, $text);
-        return $image;
+        return $this->handleImageEntityCreateImage($path, $scope, $text);
     }
 
     /**
@@ -138,23 +126,5 @@ class UploadImagesHandler extends BaseUploadImage
             ->setType(Image::TYPE_USER);
         $this->imageManager->update($image, true);
         return $image;
-    }
-
-    /**
-     * @param Image $image
-     * @param string $path
-     * @param string $scope
-     * @param string $text
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    private function handleImageEntityUpdateImage(Image $image, string $path, string $scope, string $text): void
-    {
-        $image
-            ->setPath($path)
-            ->setScope($scope)
-            ->setText($text)
-            ->setType(Image::TYPE_USER);
-        $this->imageManager->update($image, true);
     }
 }
