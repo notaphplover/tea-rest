@@ -3,14 +3,15 @@
 namespace App\Component\IO\Handler;
 
 use App\Component\Auth\Entity\TokenUser;
+use App\Component\Common\Exception\AccessDeniedException;
 use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\IO\Service\ImageManager;
 use App\Component\IO\Service\ImagePathProvider;
 use App\Component\IO\Validation\UploadImagesValidation;
 use App\Component\Person\Service\GuardianManager;
 use App\Component\Validation\Exception\InvalidInputException;
-use App\Entity\Guardian;
 use App\Entity\Image;
+use Doctrine\DBAL\Exception\ConstraintViolationException;
 
 class UploadImagesHandler extends BaseUploadImage
 {
@@ -65,17 +66,13 @@ class UploadImagesHandler extends BaseUploadImage
      * @throws \App\Component\IO\Exception\InvalidImageException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws AccessDeniedException
      */
     public function handle(array $data, TokenUser $tokenUser): array
     {
         $validation = $this->uploadFilesValidation->validate($data);
         if ($validation->count() !== 0) {
             throw new InvalidInputException($validation);
-        }
-
-        $guardian = $this->guardianManager->getById($tokenUser->getId());
-        if (null === $guardian) {
-            throw new ResourceNotFoundException();
         }
 
         $images = $data[UploadImagesValidation::FIELD_IMAGES];
@@ -102,29 +99,44 @@ class UploadImagesHandler extends BaseUploadImage
      * @return Image
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws AccessDeniedException
      */
     private function handleImageEntity(TokenUser $tokenUser, string $path, string $text): Image
     {
         $scope = $this->imagePathProvider->buildUserScope($tokenUser->getUuid());
-        return $this->handleImageEntityCreateImage($path, $scope, $text);
+        return $this->handleImageEntityCreateImage($tokenUser, $path, $scope, $text);
     }
 
     /**
+     * @param TokenUser $tokenUser
      * @param string $path
      * @param string $scope
      * @param string $text
      * @return Image
+     * @throws AccessDeniedException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function handleImageEntityCreateImage(string $path, string $scope, string $text): Image
+    private function handleImageEntityCreateImage(
+        TokenUser $tokenUser,
+        string $path,
+        string $scope,
+        string $text
+    ): Image
     {
+        $guardian = $this->guardianManager->getReference($tokenUser->getId());
         $image = (new Image())
+            ->setGuardian($guardian)
             ->setPath($path)
             ->setScope($scope)
             ->setText($text)
             ->setType(Image::TYPE_USER);
-        $this->imageManager->update($image, true);
+        try {
+            $this->imageManager->update($image, true);
+        } catch (ConstraintViolationException $exception) {
+            // The guardian does not exists, deny the access
+            throw new AccessDeniedException($exception);
+        }
         return $image;
     }
 }

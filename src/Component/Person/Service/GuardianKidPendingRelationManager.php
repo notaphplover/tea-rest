@@ -2,7 +2,6 @@
 
 namespace App\Component\Person\Service;
 
-use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\Person\Exception\KidAssociationAlreadyExists;
 use App\Entity\GuardianKidPendingRelation;
 use App\Entity\GuardianKidRelation;

@@ -3,6 +3,7 @@
 namespace App\Component\IO\Handler;
 
 use App\Component\Auth\Entity\TokenUser;
+use App\Component\Common\Exception\AccessDeniedException;
 use App\Component\Common\Exception\ResourceNotFoundException;
 use App\Component\IO\Exception\FileAlreadyExistsException;
 use App\Component\IO\Service\ImageManager;
@@ -60,6 +61,7 @@ class UpdateImageHandler extends BaseUploadImage
      * @throws \App\Component\IO\Exception\InvalidImageException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws AccessDeniedException
      */
     public function handle(array $data, int $imageId, TokenUser $tokenUser): ?Image
     {
@@ -68,14 +70,12 @@ class UpdateImageHandler extends BaseUploadImage
             throw new InvalidInputException($validation);
         }
 
-        $guardian = $this->guardianManager->getById($tokenUser->getId());
-        if (null === $guardian) {
-            throw new ResourceNotFoundException();
-        }
-
         $image = $this->imageManager->getById($imageId);
         if (null === $imageId) {
             throw new ResourceNotFoundException();
+        }
+        if ($image->getGuardian()->getId() !== $tokenUser->getId()) {
+            throw new AccessDeniedException();
         }
 
         $this->handleUpdateImage($data, $image, $tokenUser);

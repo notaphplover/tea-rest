@@ -27,6 +27,13 @@ class Image
     public const TYPE_USER = 'user';
 
     /**
+     * @ORM\ManyToOne(targetEntity=Guardian::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @var Guardian
+     */
+    private $guardian;
+
+    /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -57,6 +64,14 @@ class Image
      * @var string
      */
     private $type;
+
+    /**
+     * @return Guardian
+     */
+    public function getGuardian(): Guardian
+    {
+        return $this->guardian;
+    }
 
     /**
      * @return int
@@ -104,6 +119,16 @@ class Image
     public function getUrl(): string
     {
         return $this->scope . $this->path;
+    }
+
+    /**
+     * @param Guardian $guardian
+     * @return $this
+     */
+    public function setGuardian(Guardian $guardian): Image
+    {
+        $this->guardian = $guardian;
+        return $this;
     }
 
     /**
