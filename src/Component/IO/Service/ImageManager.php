@@ -25,10 +25,14 @@ class ImageManager extends BaseManager
 
     /**
      * @param string $path
+     * @param string $scope
      * @return Image|null
      */
-    public function getByPath(string $path): ?Image
+    public function getByPathAndScope(string $path, string $scope): ?Image
     {
-        return $this->getEntityRepository()->findOneBy(['path' => $path]);
+        return $this->getEntityRepository()->findOneBy([
+            'path' => $path,
+            'scope' => $scope
+        ]);
     }
 }

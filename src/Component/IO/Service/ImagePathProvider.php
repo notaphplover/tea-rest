@@ -6,7 +6,7 @@ namespace App\Component\IO\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
-class ImageProvider
+class ImagePathProvider
 {
     /**
      * @var string
@@ -44,16 +44,12 @@ class ImageProvider
         return $this->projectFolder
             . DIRECTORY_SEPARATOR
             . $this->publicFolder
-            . $this->buildUserRelativeImagePath($userFolder, $path);
+            . $this->buildUserScope($userFolder)
+            . $path;
     }
 
-    /**
-     * @param string $userFolder
-     * @param string $path
-     * @return string
-     */
-    public function buildUserRelativeImagePath(string $userFolder, string $path): string
+    public function buildUserScope(string $userFolder): string
     {
-        return $this->usersFolder . $userFolder . DIRECTORY_SEPARATOR . $path;
+        return $this->usersFolder . $userFolder . DIRECTORY_SEPARATOR;
     }
 }

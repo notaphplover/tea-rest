@@ -7,7 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
- * @ORM\Table(name="image")
+ * @ORM\Table(
+ *     indexes={
+ *          @ORM\Index(name="image_path", columns={"path"}),
+ *          @ORM\Index(name="image_path_scope", columns={"path", "scope"}),
+ *          @ORM\Index(name="image_scope", columns={"scope"}),
+ *     },
+ *     name="image"
+ * )
  */
 class Image
 {
@@ -27,6 +34,12 @@ class Image
      * @var string
      */
     private $path;
+
+    /**
+     * @ORM\Column(type="string", length=60)
+     * @var string
+     */
+    private $scope;
 
     /**
      * @ORM\Column(type="text")
@@ -59,6 +72,14 @@ class Image
     /**
      * @return string
      */
+    public function getScope(): string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @return string
+     */
     public function getText(): string
     {
         return $this->text;
@@ -73,12 +94,30 @@ class Image
     }
 
     /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->scope . $this->path;
+    }
+
+    /**
      * @param string $path
      * @return $this
      */
     public function setPath(string $path): Image
     {
         $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @param string $scope
+     * @return $this
+     */
+    public function setScope(string $scope): Image
+    {
+        $this->scope = $scope;
         return $this;
     }
 
