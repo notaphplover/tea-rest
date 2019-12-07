@@ -2,7 +2,7 @@
 
 namespace App\Component\Calendar\Service;
 
-use App\Repository\ConcreteSubTaskRepository;
+use App\Component\Calendar\Repository\ConcreteSubTaskRepository;
 
 class ConcreteSubTaskManager extends TaskFragmentBaseManager
 {

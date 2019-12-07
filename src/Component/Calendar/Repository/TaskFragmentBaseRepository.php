@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Component\Calendar\Repository;
 
 use App\Component\Common\Repository\BaseRepository;
 

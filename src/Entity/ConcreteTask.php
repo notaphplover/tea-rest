@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ConcreteTaskRepository;
+use App\Component\Calendar\Repository\ConcreteTaskRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;

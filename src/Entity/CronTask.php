@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\CronTaskRepository;
+use App\Component\Calendar\Repository\CronTaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
