@@ -14,7 +14,7 @@ final class Version20191204220758 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return '';
+        return 'diff-[1.0.0-alpha.1]-[X] - Image management';
     }
 
     public function up(Schema $schema) : void
