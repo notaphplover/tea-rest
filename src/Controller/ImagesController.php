@@ -9,8 +9,10 @@ use App\Component\IO\Handler\GetGuardianImagesHandler;
 use App\Component\IO\Handler\UpdateImageHandler;
 use App\Component\IO\Handler\UploadImagesHandler;
 use App\Component\Serialization\Service\SerializationProvider;
+use App\Entity\Image;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +28,27 @@ class ImagesController extends AbstractFOSRestController
     use ControllerHelper;
 
     /**
+     * @SWG\Delete(
+     *     tags={"image"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It deletes an user's image.",
+     *     @SWG\Parameter(
+     *          name="image",
+     *          in="path",
+     *          type="integer",
+     *          description="Image's id"
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Deleted image.",
+     *          @Model(
+     *              type=Image::class,
+     *              groups={"image-common"}
+     *          )
+     *     )
+     * )
+     *
      * @Rest\Delete("/{image}", requirements={"image"="\d+"})
      *
      * @param DeleteImageHandler $deleteImageHandler
@@ -52,6 +75,36 @@ class ImagesController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"image"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets a page of common images.",
+     *     @SWG\Parameter(
+     *          name="page",
+     *          in="query",
+     *          type="integer",
+     *          description="[Required] Query page number (the first page is the page number one)"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="size",
+     *          in="query",
+     *          type="integer",
+     *          description="[Required] Query page size (alloerd values are 10, 20, 30 and 40)"
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Collection of images found at the page requested.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(
+     *                  type=Image::class,
+     *                  groups={"image-common"}
+     *              )
+     *          )
+     *     )
+     * )
+     *
      * @Rest\Get("/common")
      * @Rest\QueryParam(name="page", requirements="\d+")
      * @Rest\QueryParam(name="size", requirements="\d+")
@@ -85,6 +138,36 @@ class ImagesController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Get(
+     *     tags={"image"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It gets a page of the user's images.",
+     *     @SWG\Parameter(
+     *          name="page",
+     *          in="query",
+     *          type="integer",
+     *          description="[Required] Query page number (the first page is the page number one)"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="size",
+     *          in="query",
+     *          type="integer",
+     *          description="[Required] Query page size (alloerd values are 10, 20, 30 and 40)"
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Collection of images found at the page requested.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(
+     *                  type=Image::class,
+     *                  groups={"image-common"}
+     *              )
+     *          )
+     *     )
+     * )
+     *
      * @Rest\Get("/guardian")
      * @Rest\QueryParam(name="page", requirements="\d+")
      * @Rest\QueryParam(name="size", requirements="\d+")
@@ -119,6 +202,55 @@ class ImagesController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Put(
+     *     tags={"image"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It updates an user's image.",
+     *     @SWG\Parameter(
+     *          name="image",
+     *          in="path",
+     *          type="integer",
+     *          description="Image's id"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="updateImageData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={},
+     *              @SWG\Property(
+     *                  property="content",
+     *                  type="string",
+     *                  example="/9j/2wCEAAgGBgcGBQgHBwcJCQgKDBQNDAs...",
+     *                  description="New Base64 content of the image. This must be a valid JPG or a JPEG image."
+     *              ),
+     *              @SWG\Property(
+     *                  property="path",
+     *                  type="string",
+     *                  example="/games/chess.jpg",
+     *                  description="New path of the image. No file must exist at that path."
+     *              ),
+     *              @SWG\Property(
+     *                  property="text",
+     *                  type="string",
+     *                  example="Sample text",
+     *                  description="New image's text."
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Updated image.",
+     *          @Model(
+     *              type=Image::class,
+     *              groups={"image-common"}
+     *          )
+     *     )
+     * )
+     *
      * @Rest\Put("/{image}", requirements={"image"="\d+"})
      *
      * @param int $image
@@ -156,6 +288,61 @@ class ImagesController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Post(
+     *     tags={"image"},
+     *     security={{"ApiToken": {}}},
+     *     consumes={"application/json"},
+     *     description="It updates an user's image.",
+     *     @SWG\Parameter(
+     *          name="updloadImagesData",
+     *          in="body",
+     *          required=true,
+     *          description="JSON object",
+     *          @SWG\Schema(
+     *              type="object",
+     *              required={"images"},
+     *              @SWG\Property(
+     *                  property="images",
+     *                  type="array",
+     *                  description="Images to upload",
+     *                  @SWG\Items(
+     *                      type="object",
+     *                      required={"content", "path", "text"},
+     *                      @SWG\Property(
+     *                          property="content",
+     *                          type="string",
+     *                          example="/9j/2wCEAAgGBgcGBQgHBwcJCQgKDBQNDAs...",
+     *                          description="Base 64 image content. This must be a valid JPG or JPEG image"
+     *                      ),
+     *                      @SWG\Property(
+     *                          property="path",
+     *                          type="string",
+     *                          example="/games/chess.jpg",
+     *                          description="Image's path. No file must exist at that path"
+     *                      ),
+     *                      @SWG\Property(
+     *                          property="text",
+     *                          type="string",
+     *                          example="Sample text",
+     *                          description="Image's text"
+     *                      ),
+     *                  )
+     *              )
+     *          )
+     *     ),
+     *     @SWG\Response(
+     *          response="200",
+     *          description="Collection of images updated.",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @Model(
+     *                  type=Image::class,
+     *                  groups={"image-common"}
+     *              )
+     *          )
+     *     )
+     * )
+     *
      * @Rest\Post("")
      *
      * @param Request $request
