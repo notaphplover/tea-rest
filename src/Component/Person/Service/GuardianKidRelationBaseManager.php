@@ -4,8 +4,8 @@ namespace App\Component\Person\Service;
 
 use App\Component\Common\Service\BaseManager;
 use App\Entity\GuardianKidRelationBase;
-use App\Repository\GuardianKidRelationBaseRepository;
-use App\Repository\GuardianRepository;
+use App\Component\Person\Repository\GuardianKidRelationBaseRepository;
+use App\Component\Person\Repository\GuardianRepository;
 
 /**
  * Class GuardianKidRelationBaseManager

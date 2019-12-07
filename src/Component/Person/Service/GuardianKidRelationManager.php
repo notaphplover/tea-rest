@@ -3,8 +3,8 @@
 namespace App\Component\Person\Service;
 
 use App\Entity\GuardianKidRelation;
-use App\Repository\GuardianKidRelationRepository;
-use App\Repository\GuardianRepository;
+use App\Component\Person\Repository\GuardianKidRelationRepository;
+use App\Component\Person\Repository\GuardianRepository;
 
 /**
  * Class GuardianKidRelationManager

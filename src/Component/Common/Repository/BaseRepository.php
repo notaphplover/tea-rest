@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Component\Common\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use function Doctrine\ORM\QueryBuilder;
 
 abstract class BaseRepository extends ServiceEntityRepository
 {

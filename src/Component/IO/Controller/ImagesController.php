@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Component\IO\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
+use App\Component\Common\Controller\ControllerHelper;
 use App\Component\IO\Handler\DeleteImageHandler;
 use App\Component\IO\Handler\GetCommonImagesHandler;
 use App\Component\IO\Handler\GetGuardianImagesHandler;

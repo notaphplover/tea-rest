@@ -1,5 +1,7 @@
 .idea
 
+.env
+
 /config/jwt/private.pem
 /config/jwt/public.pem
 /config/parameters.yaml

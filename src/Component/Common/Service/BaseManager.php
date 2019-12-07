@@ -2,7 +2,7 @@
 
 namespace App\Component\Common\Service;
 
-use App\Repository\BaseRepository;
+use App\Component\Common\Repository\BaseRepository;
 
 abstract class BaseManager
 {

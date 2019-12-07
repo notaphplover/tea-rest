@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\GuardianRepository;
+use App\Component\Person\Repository\GuardianRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 

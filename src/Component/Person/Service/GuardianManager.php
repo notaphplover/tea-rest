@@ -4,7 +4,7 @@ namespace App\Component\Person\Service;
 
 use App\Component\Common\Service\BaseManager;
 use App\Entity\Guardian;
-use App\Repository\GuardianRepository;
+use App\Component\Person\Repository\GuardianRepository;
 
 /**
  * Class GuardianManager

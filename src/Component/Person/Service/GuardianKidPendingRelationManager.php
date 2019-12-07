@@ -5,9 +5,9 @@ namespace App\Component\Person\Service;
 use App\Component\Person\Exception\KidAssociationAlreadyExists;
 use App\Entity\GuardianKidPendingRelation;
 use App\Entity\GuardianKidRelation;
-use App\Repository\GuardianKidPendingRelationRepository;
-use App\Repository\GuardianKidRelationRepository;
-use App\Repository\GuardianRepository;
+use App\Component\Person\Repository\GuardianKidPendingRelationRepository;
+use App\Component\Person\Repository\GuardianKidRelationRepository;
+use App\Component\Person\Repository\GuardianRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 /**

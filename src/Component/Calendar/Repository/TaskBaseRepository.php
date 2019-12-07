@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Repository;
+namespace App\Component\Calendar\Repository;
 
 use App\Entity\TaskBase;
 use DateTime;
-use function Doctrine\ORM\QueryBuilder;
 
 abstract class TaskBaseRepository extends TaskFragmentBaseRepository
 {

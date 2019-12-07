@@ -3,7 +3,7 @@
 namespace App\Component\Calendar\Service;
 
 use App\Entity\TaskBase;
-use App\Repository\TaskBaseRepository;
+use App\Component\Calendar\Repository\TaskBaseRepository;
 use DateTime;
 
 /**

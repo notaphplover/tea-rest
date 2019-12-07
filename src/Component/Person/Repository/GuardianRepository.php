@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Repository;
+namespace App\Component\Person\Repository;
 
+use App\Component\Common\Repository\BaseRepository;
 use App\Entity\Guardian;
 use Doctrine\Common\Persistence\ManagerRegistry;
 

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\KidRepository;
+use App\Component\Person\Repository\KidRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
