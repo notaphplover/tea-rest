@@ -14,3 +14,7 @@ controllers_common:
     resource: ../../src/Component/Common/Controller/
     type: annotation
 
+controllers_io:
+    resource: ../../src/Component/IO/Controller/
+    type: annotation
+

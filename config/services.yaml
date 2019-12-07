@@ -38,5 +38,9 @@ services:
         resource: '../src/Component/Common/Controller'
         tags: ['controller.service_arguments']
 
+    App\Component\IO\Controller\:
+        resource: '../src/Component/IO/Controller'
+        tags: ['controller.service_arguments']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
