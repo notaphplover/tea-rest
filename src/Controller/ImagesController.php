@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
 use App\Component\IO\Handler\DeleteImageHandler;
+use App\Component\IO\Handler\GetCommonImagesHandler;
 use App\Component\IO\Handler\GetGuardianImagesHandler;
 use App\Component\IO\Handler\UpdateImageHandler;
 use App\Component\IO\Handler\UploadImagesHandler;
 use App\Component\Serialization\Service\SerializationProvider;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Request\ParamFetcherInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +45,39 @@ class ImagesController extends AbstractFOSRestController
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
                 $deletedImage,
+                'json',
+                ['groups' => ['image-common']]
+            )
+        );
+    }
+
+    /**
+     * @Rest\Get("/common")
+     * @Rest\QueryParam(name="page", requirements="\d+")
+     * @Rest\QueryParam(name="size", requirements="\d+")
+     *
+     * @param GetCommonImagesHandler $getCommonImagesHandler
+     * @param int $page
+     * @param int $size
+     * @param SerializationProvider $serializationProvider
+     * @return JsonResponse
+     * @throws \App\Component\Validation\Exception\InvalidInputException
+     */
+    public function getCommonImagesAction(
+        GetCommonImagesHandler $getCommonImagesHandler,
+        int $page,
+        int $size,
+        SerializationProvider $serializationProvider
+    ): JsonResponse
+    {
+        $content = [
+            'page' => $page,
+            'size' => $size,
+        ];
+        $images = $getCommonImagesHandler->handle($content);
+        return JsonResponse::fromJsonString(
+            $serializationProvider->getSerializer()->serialize(
+                $images,
                 'json',
                 ['groups' => ['image-common']]
             )

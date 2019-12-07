@@ -30,6 +30,27 @@ class ImageRepository extends BaseRepository
     }
 
     /**
+     * @param int $pageNumber Page number
+     * @param int $pageSize Page size
+     * @return Image[] images found.
+     */
+    public function getCommonImagesByPage(int $pageNumber, int $pageSize): array
+    {
+        if (0 >= $pageNumber || 0 >= $pageSize) {
+            return [];
+        }
+        $qb = $this->createQueryBuilder('image');
+        $query = $qb
+            ->where($qb->expr()->eq('image.type', ':type'))
+            ->setFirstResult(($pageNumber - 1) * $pageSize)
+            ->setMaxResults($pageSize)
+            ->setParameter('type', Image::TYPE_COMMON)
+            ->getQuery()
+        ;
+        return $query->getResult();
+    }
+
+    /**
      * @param int $guardianId
      * @param int $pageNumber
      * @param int $pageSize

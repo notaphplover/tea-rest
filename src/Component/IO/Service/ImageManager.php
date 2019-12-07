@@ -24,6 +24,16 @@ class ImageManager extends BaseManager
     }
 
     /**
+     * @param int $pageNumber
+     * @param int $pageSize
+     * @return Image[]
+     */
+    public function getCommonImagesByPage(int $pageNumber, int $pageSize): array
+    {
+        return $this->getEntityRepository()->getCommonImagesByPage($pageNumber, $pageSize);
+    }
+
+    /**
      * @param int $guardianId
      * @param int $pageNumber
      * @param int $pageSize
