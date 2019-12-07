@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Component\Calendar\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
 use App\Component\Calendar\Handler\CreateTasksHandler;
 use App\Component\Calendar\Handler\GetTasksHandler;
+use App\Component\Common\Controller\ControllerHelper;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\ConcreteTask;
 use FOS\RestBundle\Controller\AbstractFOSRestController;

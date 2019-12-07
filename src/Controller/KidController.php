@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Component\Auth\Entity\TokenUser;
+use App\Component\Common\Controller\ControllerHelper;
 use App\Component\Person\Handler\CreateKidHandler;
 use App\Component\Person\Handler\GetKidsOfGuardianHandler;
 use App\Component\Person\Handler\GetPendingAssociationsHandler;

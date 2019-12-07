@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Component\Common\Controller;
 
 use App\Component\Validation\Exception\InvalidJsonFormatException;
 use App\Component\Validation\Exception\MissingBodyException;
