@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security;
+namespace App\Component\Auth\Security;
 
 use App\Component\Auth\Exception\InvalidTokenException;
 use App\Component\JWT\Service\JWTBuilder;

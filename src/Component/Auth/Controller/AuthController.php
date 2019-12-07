@@ -11,7 +11,6 @@ use App\Component\Common\Controller\ControllerHelper;
 use App\Component\Person\Handler\LoginHandler;
 use App\Component\Person\Handler\RegisterHandler;
 use App\Component\Serialization\Service\SerializationProvider;
-use App\Security\TokenAuthenticator;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Swagger\Annotations as SWG;
@@ -383,19 +382,17 @@ class AuthController extends AbstractFOSRestController
      *
      * @Rest\Post("/register")
      * @param Request $request
-     * @param TokenAuthenticator $tokenAuthenticator
      * @param RegisterHandler $registerHandler
      * @return JsonResponse
      * @throws \App\Component\Auth\Exception\UserAlreadyExistsException
+     * @throws \App\Component\Validation\Exception\InvalidInputException
      * @throws \App\Component\Validation\Exception\InvalidJsonFormatException
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \App\Component\Validation\Exception\InvalidInputException
      */
     public function registerAction(
         Request $request,
-        TokenAuthenticator $tokenAuthenticator,
         RegisterHandler $registerHandler
     ): JsonResponse
     {

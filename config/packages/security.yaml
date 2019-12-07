@@ -15,7 +15,7 @@ security:
             anonymous: ~
             guard:
                 authenticators:
-                    - App\Security\TokenAuthenticator
+                    - App\Component\Auth\Security\TokenAuthenticator
             pattern: ^/api
             provider: app_user_provider
             stateless: true
