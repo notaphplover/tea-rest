@@ -4,6 +4,8 @@
 /config/jwt/public.pem
 /config/parameters.yaml
 
+/public/assets
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -16,3 +18,7 @@
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###

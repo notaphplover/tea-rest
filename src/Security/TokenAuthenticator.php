@@ -75,7 +75,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         if (null === $token) {
             return;
         }
-        return $this->jwtBuilder->getUser($token);
+        try {
+            return $this->jwtBuilder->getUser($token);
+        } catch (\Exception $exception) {
+            throw new InvalidTokenException($exception);
+        }
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

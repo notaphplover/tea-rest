@@ -1,0 +1,14 @@
+App\Entity\Image:
+    attributes:
+        id:
+            groups: ["image-id", "image-common", "image-full"]
+        path:
+            groups: ["image-common", "image-full"]
+        scope:
+            groups: ["image-full"]
+        text:
+            groups: ["image-common", "image-full"]
+        type:
+            groups: ["image-full"]
+        url:
+            groups: ["image-common", "image-full"]

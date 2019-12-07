@@ -23,30 +23,30 @@ class TokenUser implements UserInterface
     private $name;
 
     /**
-     * @var string[]
+     * @var string
      */
-    private $roles;
+    private $surname;
 
     /**
      * @var string
      */
-    private $surname;
+    private $uuid;
 
     /**
      * TokenUser constructor.
      * @param string $email
      * @param int $id
      * @param string $name
-     * @param string[] $roles
      * @param string $surname
+     * @param string $uuid
      */
-    public function __construct(string $email, int $id, string $name, array $roles, string $surname)
+    public function __construct(string $email, int $id, string $name, string $surname, string $uuid)
     {
         $this->email = $email;
         $this->id = $id;
         $this->name = $name;
-        $this->roles = $roles;
         $this->surname = $surname;
+        $this->uuid = $uuid;
     }
 
 
@@ -96,7 +96,7 @@ class TokenUser implements UserInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return [];
     }
 
     /**
@@ -121,5 +121,13 @@ class TokenUser implements UserInterface
     public function getUsername(): string
     {
         return $this->getEmail();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
     }
 }

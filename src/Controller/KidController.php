@@ -300,7 +300,7 @@ class KidController extends AbstractFOSRestController
      *          name="association",
      *          in="path",
      *          type="integer",
-     *          description="Kid's id"
+     *          description="Association's id"
      *     ),
      *     @SWG\Parameter(
      *          name="resolveKidAssociationData",
@@ -309,7 +309,7 @@ class KidController extends AbstractFOSRestController
      *          description="JSON object",
      *          @SWG\Schema(
      *              type="object",
-     *              required={"id", "resolution"},
+     *              required={"resolution"},
      *              @SWG\Property(
      *                  property="resolution",
      *                  type="string",
