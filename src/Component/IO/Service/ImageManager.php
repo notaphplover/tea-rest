@@ -4,7 +4,7 @@ namespace App\Component\IO\Service;
 
 use App\Component\Common\Service\BaseManager;
 use App\Entity\Image;
-use App\Repository\ImageRepository;
+use App\Component\IO\Repository\ImageRepository;
 
 /**
  * Class ImageManager

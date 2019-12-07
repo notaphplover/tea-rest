@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
+use App\Component\IO\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
