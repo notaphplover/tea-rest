@@ -24,6 +24,17 @@ class ImageManager extends BaseManager
     }
 
     /**
+     * @param int $guardianId
+     * @param int $pageNumber
+     * @param int $pageSize
+     * @return Image[]
+     */
+    public function getByGuardianAndPage(int $guardianId, int $pageNumber, int $pageSize): array
+    {
+        return $this->getEntityRepository()->getByGuardianAndPage($guardianId, $pageNumber, $pageSize);
+    }
+
+    /**
      * @param string $path
      * @param string $scope
      * @return Image|null
