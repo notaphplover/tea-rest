@@ -1,0 +1,8 @@
+App\Component\IO\Serialization\Entity\ImageThumbnails:
+    attributes:
+        sm:
+            groups: ["image-thumbnails-common"]
+        md:
+            groups: ["image-thumbnails-common"]
+        lg:
+            groups: ["image-thumbnails-common"]

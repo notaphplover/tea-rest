@@ -1,21 +1,21 @@
 liip_imagine:
     driver: gd
     filter_sets:
-        square_sm:
+        squaresm:
             quality: 75
             filters:
                 thumbnail:
                     allow_upscale: true
                     mode: inset
                     size: [128, 128]
-        square_md:
+        squaremd:
             quality: 80
             filters:
                 thumbnail:
                     allow_upscale: true
                     mode: inset
                     size: [256, 256]
-        square_lg:
+        squarelg:
             quality: 80
             filters:
                 thumbnail:

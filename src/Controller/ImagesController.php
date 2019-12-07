@@ -8,6 +8,8 @@ use App\Component\IO\Handler\GetCommonImagesHandler;
 use App\Component\IO\Handler\GetGuardianImagesHandler;
 use App\Component\IO\Handler\UpdateImageHandler;
 use App\Component\IO\Handler\UploadImagesHandler;
+use App\Component\IO\Serialization\Entity\RichImage;
+use App\Component\IO\Service\RichImageGenerator;
 use App\Component\Serialization\Service\SerializationProvider;
 use App\Entity\Image;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -98,8 +100,8 @@ class ImagesController extends AbstractFOSRestController
      *          @SWG\Schema(
      *              type="array",
      *              @Model(
-     *                  type=Image::class,
-     *                  groups={"image-common"}
+     *                  type=RichImage::class,
+     *                  groups={"image-common", "image-thumbnails-common", "rich-image-common"}
      *              )
      *          )
      *     )
@@ -111,6 +113,7 @@ class ImagesController extends AbstractFOSRestController
      *
      * @param GetCommonImagesHandler $getCommonImagesHandler
      * @param int $page
+     * @param RichImageGenerator $richImageGenerator
      * @param int $size
      * @param SerializationProvider $serializationProvider
      * @return JsonResponse
@@ -119,6 +122,7 @@ class ImagesController extends AbstractFOSRestController
     public function getCommonImagesAction(
         GetCommonImagesHandler $getCommonImagesHandler,
         int $page,
+        RichImageGenerator $richImageGenerator,
         int $size,
         SerializationProvider $serializationProvider
     ): JsonResponse
@@ -128,11 +132,14 @@ class ImagesController extends AbstractFOSRestController
             'size' => $size,
         ];
         $images = $getCommonImagesHandler->handle($content);
+
+        $richImages = $richImageGenerator->buildRichImages($images);
+
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $images,
+                $richImages,
                 'json',
-                ['groups' => ['image-common']]
+                ['groups' => ['image-common', 'image-thumbnails-common', 'rich-image-common']]
             )
         );
     }
@@ -161,8 +168,8 @@ class ImagesController extends AbstractFOSRestController
      *          @SWG\Schema(
      *              type="array",
      *              @Model(
-     *                  type=Image::class,
-     *                  groups={"image-common"}
+     *                  type=RichImage::class,
+     *                  groups={"image-common", "image-thumbnails-common", "rich-image-common"}
      *              )
      *          )
      *     )
@@ -174,6 +181,7 @@ class ImagesController extends AbstractFOSRestController
      *
      * @param GetGuardianImagesHandler $getGuardianImagesHandler
      * @param int $page
+     * @param RichImageGenerator $richImageGenerator
      * @param int $size
      * @param SerializationProvider $serializationProvider
      * @return JsonResponse
@@ -182,6 +190,7 @@ class ImagesController extends AbstractFOSRestController
     public function getImagesOfGuardianAction(
         GetGuardianImagesHandler $getGuardianImagesHandler,
         int $page,
+        RichImageGenerator $richImageGenerator,
         int $size,
         SerializationProvider $serializationProvider
     ): JsonResponse
@@ -192,11 +201,14 @@ class ImagesController extends AbstractFOSRestController
         ];
         $user = $this->getUser();
         $images = $getGuardianImagesHandler->handle($content, $user);
+
+        $richImages = $richImageGenerator->buildRichImages($images);
+
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $images,
+                $richImages,
                 'json',
-                ['groups' => ['image-common']]
+                ['groups' => ['image-common', 'image-thumbnails-common', 'rich-image-common']]
             )
         );
     }

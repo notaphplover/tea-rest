@@ -1,0 +1,6 @@
+App\Component\IO\Serialization\Entity\RichImage:
+    attributes:
+        image:
+            groups: ["rich-image-common"]
+        thumbnails:
+            groups: ["rich-image-common"]
