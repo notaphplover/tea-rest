@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Component\Person\Repository;
 
 use App\Entity\GuardianKidRelation;
 use Doctrine\Common\Persistence\ManagerRegistry;

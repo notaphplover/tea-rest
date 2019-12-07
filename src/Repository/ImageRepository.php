@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
+use App\Component\Common\Repository\BaseRepository;
 use App\Entity\Image;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use function Doctrine\ORM\QueryBuilder;
 
 /**
  * Class ImageRepository

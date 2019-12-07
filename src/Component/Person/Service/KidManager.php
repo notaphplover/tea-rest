@@ -5,8 +5,8 @@ namespace App\Component\Person\Service;
 use App\Component\Common\Service\BaseManager;
 use App\Entity\GuardianKidRelation;
 use App\Entity\Kid;
-use App\Repository\GuardianKidRelationRepository;
-use App\Repository\KidRepository;
+use App\Component\Person\Repository\GuardianKidRelationRepository;
+use App\Component\Person\Repository\KidRepository;
 
 /**
  * Class KidManager

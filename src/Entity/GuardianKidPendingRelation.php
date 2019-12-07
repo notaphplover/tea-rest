@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\GuardianKidPendingRelationRepository;
+use App\Component\Person\Repository\GuardianKidPendingRelationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
