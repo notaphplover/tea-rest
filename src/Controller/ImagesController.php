@@ -257,8 +257,8 @@ class ImagesController extends AbstractFOSRestController
      *          response="200",
      *          description="Updated image.",
      *          @Model(
-     *              type=Image::class,
-     *              groups={"image-common"}
+     *              type=RichImage::class,
+     *              groups={"image-common", "image-thumbnails-common", "rich-image-common"}
      *          )
      *     )
      * )
@@ -267,9 +267,11 @@ class ImagesController extends AbstractFOSRestController
      *
      * @param int $image
      * @param Request $request
+     * @param RichImageGenerator $richImageGenerator
      * @param SerializationProvider $serializationProvider
      * @param UpdateImageHandler $updateImageHandler
      * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
      * @throws \App\Component\Common\Exception\ResourceNotFoundException
      * @throws \App\Component\IO\Exception\FileAlreadyExistsException
      * @throws \App\Component\IO\Exception\InvalidImageException
@@ -278,11 +280,11 @@ class ImagesController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \App\Component\Common\Exception\AccessDeniedException
      */
     public function updateUploadedImageAction(
         int $image,
         Request $request,
+        RichImageGenerator $richImageGenerator,
         SerializationProvider $serializationProvider,
         UpdateImageHandler $updateImageHandler
     ): JsonResponse
@@ -290,11 +292,14 @@ class ImagesController extends AbstractFOSRestController
         $content = $this->parseJsonFromRequest($request);
 
         $updatedImage = $updateImageHandler->handle($content, $image, $this->getUser());
+
+        $richImage = $richImageGenerator->buildRichImage($updatedImage);
+
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $updatedImage,
+                $richImage,
                 'json',
-                ['groups' => ['image-common']]
+                ['groups' => ['image-common', 'image-thumbnails-common', 'rich-image-common']]
             )
         );
     }
@@ -348,8 +353,8 @@ class ImagesController extends AbstractFOSRestController
      *          @SWG\Schema(
      *              type="array",
      *              @Model(
-     *                  type=Image::class,
-     *                  groups={"image-common"}
+     *                  type=RichImage::class,
+     *                  groups={"image-common", "image-thumbnails-common", "rich-image-common"}
      *              )
      *          )
      *     )
@@ -359,8 +364,10 @@ class ImagesController extends AbstractFOSRestController
      *
      * @param Request $request
      * @param UploadImagesHandler $uploadImagesHandler
+     * @param RichImageGenerator $richImageGenerator
      * @param SerializationProvider $serializationProvider
      * @return JsonResponse
+     * @throws \App\Component\Common\Exception\AccessDeniedException
      * @throws \App\Component\Common\Exception\ResourceNotFoundException
      * @throws \App\Component\IO\Exception\BadBase64FileException
      * @throws \App\Component\IO\Exception\FileAlreadyExistsException
@@ -370,22 +377,25 @@ class ImagesController extends AbstractFOSRestController
      * @throws \App\Component\Validation\Exception\MissingBodyException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \App\Component\Common\Exception\AccessDeniedException
      */
     public function uploadImagesAction(
         Request $request,
         UploadImagesHandler $uploadImagesHandler,
+        RichImageGenerator $richImageGenerator,
         SerializationProvider $serializationProvider
     ): JsonResponse
     {
         $content = $this->parseJsonFromRequest($request);
 
         $images = $uploadImagesHandler->handle($content, $this->getUser());
+
+        $richImages = $richImageGenerator->buildRichImages($images);
+
         return JsonResponse::fromJsonString(
             $serializationProvider->getSerializer()->serialize(
-                $images,
+                $richImages,
                 'json',
-                ['groups' => ['image-common']]
+                ['groups' => ['image-common', 'image-thumbnails-common', 'rich-image-common']]
             )
         );
     }
